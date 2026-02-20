@@ -121,9 +121,11 @@ namespace Yarn.Unity
         public void RefreshOptionViews()
         {
             optionViews.Clear();
+
+            var root = canvasGroup != null ? canvasGroup.transform : transform;
             
             // Only scan immediate children to avoid finding nested items or the parent itself
-            foreach (Transform child in transform)
+            foreach (Transform child in root)
             {
                 if (child.TryGetComponent<BespokeOptionItem>(out var optionView))
                 {
