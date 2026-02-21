@@ -60,7 +60,10 @@ public class WaypointFollower : MonoBehaviour
         {
             stop = !stop;
         }
-
+    }
+    
+    void FixedUpdate()
+    {
         //Calculate distance and set waypoint
         distance = Vector3.Distance(this.transform.position, nextTarget.position);
 

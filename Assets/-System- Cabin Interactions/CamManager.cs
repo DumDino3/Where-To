@@ -24,9 +24,20 @@ public class CamManager : MonoBehaviour
 
     void Start()
     {
+        GameObject vCams = GameObject.FindGameObjectWithTag("VCams");
+        for (int i = 0; i < vCams.transform.childCount; i++)
+        {
+            Transform vCam = vCams.transform.GetChild(i);
+            CinemachineVirtualCamera vCamComponent = vCam.GetComponent<CinemachineVirtualCamera>();
+
+            CamAngles.Add(vCamComponent);
+        }
+
         //Determine where screen edges would be on set resolution
         screenW = Screen.width;
         screenH = Screen.height;
+
+
     }
 
     void Update()

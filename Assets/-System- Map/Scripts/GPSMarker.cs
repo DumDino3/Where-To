@@ -6,10 +6,16 @@ using UnityEngine;
 public class GPSMarker : MonoBehaviour
 {
     [Header("References")]
-    public Transform worldTarget;          // Player / NPC / object in world
+    [SerializeField] private string targetTag;
+    private Transform worldTarget;          // Player / NPC / object in world
     public RectTransform icon;              // UI icon on map
     public MapProjection mapProjection;     // The projection utility
 
+    void Start()
+    {
+        GameObject targetObject = GameObject.FindGameObjectWithTag(targetTag);
+        worldTarget = targetObject.transform;
+    }
     private void LateUpdate()
     {
         if (worldTarget == null || icon == null || mapProjection == null)
