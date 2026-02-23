@@ -21,22 +21,7 @@ static public class WaypointEditor
                 Gizmos.DrawLine(waypoint.transform.position, connectedWaypoint.transform.position);
             }
         }
-
-
-        if(waypoint.isIntersection)
-        {
-            if(waypoint.leftTurn != null)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(waypoint.transform.position, waypoint.leftTurn.position);
-            }
-
-            if(waypoint.rightTurn != null)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawLine(waypoint.transform.position, waypoint.rightTurn.position);
-            }
-        }
+        
         
     }
 }
