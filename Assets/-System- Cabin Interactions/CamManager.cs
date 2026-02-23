@@ -1,4 +1,4 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +9,7 @@ using Yarn.Unity;
 
 public class CamManager : MonoBehaviour
 {
-    public List<CinemachineVirtualCamera> CamAngles;
+    public List<CinemachineCamera> CamAngles;
 
     [Range(0.0f, 0.1f)]
     public float edgeThickness = 0.02f;
@@ -28,7 +28,7 @@ public class CamManager : MonoBehaviour
         for (int i = 0; i < vCams.transform.childCount; i++)
         {
             Transform vCam = vCams.transform.GetChild(i);
-            CinemachineVirtualCamera vCamComponent = vCam.GetComponent<CinemachineVirtualCamera>();
+            CinemachineCamera vCamComponent = vCam.GetComponent<CinemachineCamera>();
 
             CamAngles.Add(vCamComponent);
         }
