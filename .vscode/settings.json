@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Where-To.sln"
+    "dotnet.defaultSolution": "Where-To.slnx"
 }
