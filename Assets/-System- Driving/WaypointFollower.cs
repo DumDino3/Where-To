@@ -1,188 +1,141 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.Analytics;
+using UnityEditor;
+using System.Collections.Generic;
 
 public class WaypointFollower : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 1f;
-    [SerializeField] private float turnSpeed = 1f;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float turnSpeed = 5f;
+    [SerializeField] private float deadzoneAngle = 25f; 
+    [SerializeField] private float maxTurnAngle = 100f; 
 
-    //public Transform previousWaypoint;
     public Transform nextTarget;
     public Transform previousTarget;
     private Vector3 direction;
     public float distance;
 
-    [SerializeField] private int turnDesire = 1;
+    [SerializeField] private int turnDesire = 1; // 0: Left, 1: Straight, 2: Right
     private bool stop = false;
     
-    //Use this to manipulate the car turn signal's animation
     [SerializeField] private Animator SignalAnimator;
-    private int signalID;
-    //-------------------------------//
-    
+
     void Update()
     {
-        if (SignalAnimator != null)
-        {
-            signalID = turnDesire;
-            SignalAnimator.SetInteger("Signal", signalID);
-        }
+        if (SignalAnimator != null) SignalAnimator.SetInteger("Signal", turnDesire);
         
-        //Turn desire 0 = left desire ; 1 = no desire  ; 2 = right desire
+        // Toggle Left
         if (Input.GetKeyDown(KeyCode.A))
         {
-            turnDesire = 0;
+            turnDesire = (turnDesire == 0) ? 1 : 0;
         }
+        // Toggle Right
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            turnDesire = 2;
+            turnDesire = (turnDesire == 2) ? 1 : 2;
         }
+        // Manual Straight
         else if (Input.GetKeyDown(KeyCode.W))
         {
             turnDesire = 1;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            Transform tempNextTarget = nextTarget;
-            Transform tempPreviousTarget = previousTarget;
-            
-            nextTarget = tempPreviousTarget;
-            previousTarget = tempNextTarget;
-
+            Transform temp = nextTarget;
+            nextTarget = previousTarget;
+            previousTarget = temp;
             stop = false;
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            stop = !stop;
-        }
+        else if (Input.GetKeyDown(KeyCode.Space)) stop = !stop;
     }
-    
+
     void FixedUpdate()
     {
-        //Calculate distance and set waypoint
-        distance = Vector3.Distance(this.transform.position, nextTarget.position);
+        if (nextTarget == null || previousTarget == null) return;
 
-        //If target hasn's been reached, rotate towards it and move foward
-        if (distance > 0.5)
+        distance = Vector3.Distance(transform.position, nextTarget.position);
+
+        if (distance > 0.5f)
         {
-            CalculateDirection();
-            MoveTowardsWaypoint();
+            direction = (nextTarget.position - transform.position).normalized;
+            float actualTurn = stop ? 0 : turnSpeed;
+            float actualSpeed = stop ? 0 : moveSpeed;
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, actualTurn * Time.deltaTime);
+            }
+            transform.position += transform.forward * actualSpeed * Time.deltaTime;
         }
-
-        //If target has been reached find a new target
-        else if (distance <= 1)
+        else
         {
-            Waypoint targetWaypointScript = nextTarget.gameObject.GetComponent<Waypoint>();
-            signalID = 1;
+            Waypoint currentWaypoint = nextTarget.GetComponent<Waypoint>();
+            Vector3 approachDir = (nextTarget.position - previousTarget.position).normalized;
+            
+            Waypoint bestMatch = null;
+            Waypoint straightPath = null;
+            List<Waypoint> anyForwardPaths = new List<Waypoint>();
 
-            //If target ISN'T a waypoint, move to the next target
-            if (targetWaypointScript.isIntersection != true)
+            foreach (Waypoint neighbor in currentWaypoint.connectedWaypoints)
             {
-                bool foundNext = false;
-                foreach (Waypoint connectedWaypoint in targetWaypointScript.connectedWaypoints)
-                {
-                    if (connectedWaypoint != null && connectedWaypoint.gameObject.transform != previousTarget)
-                    {
-                        previousTarget = nextTarget;
-                        nextTarget = connectedWaypoint.gameObject.transform;
-                        stop = false;
-                        foundNext = true;
-                        break;
-                    }
-                }
-                if (!foundNext) stop = true;
+                if (neighbor == null || neighbor.transform == previousTarget) continue;
+
+                Vector3 dirToNeighbor = (neighbor.transform.position - nextTarget.position).normalized;
+                float angle = Vector3.SignedAngle(approachDir, dirToNeighbor, Vector3.up);
+
+                bool inLeftZone = angle < -deadzoneAngle && angle > -maxTurnAngle;
+                bool inRightZone = angle > deadzoneAngle && angle < maxTurnAngle;
+                bool inStraightZone = Mathf.Abs(angle) <= deadzoneAngle;
+
+                if (turnDesire == 0 && inLeftZone) { bestMatch = neighbor; break; }
+                if (turnDesire == 2 && inRightZone) { bestMatch = neighbor; break; }
+
+                if (inStraightZone) straightPath = neighbor;
+                if (inLeftZone || inRightZone || inStraightZone) anyForwardPaths.Add(neighbor);
             }
 
-            //If target IS a waypoint, set target according to desire
-            else if(targetWaypointScript.isIntersection == true)
+            if (bestMatch != null) 
             {
-                //Turn desire 0 = left desire ; 1 = no desire  ; 2 = right desire
-                switch (turnDesire)
-                {
-                    case 0:
-                        if (targetWaypointScript.leftTurn != null)
-                        {
-                            previousTarget = nextTarget;
-                            nextTarget = targetWaypointScript.leftTurn.gameObject.transform;
-                            stop = false;
-                        }
-                        else
-                        {
-                            stop = true;
-                        }
-                        turnDesire = 1;
-                        break;
-
-                    //If no desire, go straight if possible, else stop
-                    case 1:
-                        
-                        bool foundStraight = false;
-                        foreach (Waypoint connectedWaypoint in targetWaypointScript.connectedWaypoints)
-                        {
-                            if (connectedWaypoint != null && connectedWaypoint.gameObject.transform != previousTarget)
-                            {
-                                previousTarget = nextTarget;
-                                nextTarget = connectedWaypoint.gameObject.transform;
-                                stop = false;
-                                foundStraight = true;
-                                break;
-                            }
-                        }
-
-                        if (!foundStraight) stop = true;
-                        
-                        break;
-
-                    case 2:
-                        if (targetWaypointScript.rightTurn != null)
-                        {
-                            previousTarget = nextTarget;
-                            nextTarget = targetWaypointScript.rightTurn.gameObject.transform;
-                            stop = false;
-                        }
-                        else
-                        {
-                            stop = true;
-                        }
-                        turnDesire = 1;
-                        break;
-                }
+                SetNewTarget(bestMatch.transform);
             }
+            else if (turnDesire == 1) 
+            {
+                if (straightPath != null) SetNewTarget(straightPath.transform);
+                else if (anyForwardPaths.Count == 1) SetNewTarget(anyForwardPaths[0].transform);
+                else stop = true; 
+            }
+            else stop = true; 
         }
     }
 
-    private void CalculateDirection()
+    private void SetNewTarget(Transform target)
     {
-        direction = new Vector3(nextTarget.position.x - this.transform.position.x,
-                                nextTarget.position.y - this.transform.position.y,
-                                nextTarget.position.z - this.transform.position.z).normalized;
+        previousTarget = nextTarget;
+        nextTarget = target;
+        turnDesire = 1; 
+        stop = false;
     }
 
-    private void MoveTowardsWaypoint()
+    private void OnDrawGizmos()
     {
-        float actualTurn = 0;
-        float actualSpeed = 0;
+        if (nextTarget == null || previousTarget == null) return;
+        Vector3 center = nextTarget.position;
+        Vector3 approachDir = (nextTarget.position - previousTarget.position).normalized;
 
-        if (stop)
-        {
-            actualTurn = 0;
-            actualSpeed = 0;
-        }
+        #if UNITY_EDITOR
+        // This is the "Spine" - the path the car just took
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(previousTarget.position, center);
 
-        if (!stop)
-        {
-            actualTurn = turnSpeed;
-            actualSpeed = moveSpeed;
-        }
+        // Straight Deadzone
+        Handles.color = new Color(0, 1, 0, 0.1f);
+        Vector3 straightStart = Quaternion.Euler(0, -deadzoneAngle, 0) * approachDir;
+        Handles.DrawSolidArc(center, Vector3.up, straightStart, deadzoneAngle * 2, 5f);
 
-        Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, actualTurn * Time.deltaTime);
-
-        transform.position += this.transform.forward * actualSpeed * Time.deltaTime;
+        // Wide Greedy Detection Sweep
+        Handles.color = new Color(0, 1, 1, 0.03f); 
+        Vector3 sweepStart = Quaternion.Euler(0, -maxTurnAngle, 0) * approachDir;
+        Handles.DrawSolidArc(center, Vector3.up, sweepStart, maxTurnAngle * 2, 5f);
+        #endif
     }
 }
