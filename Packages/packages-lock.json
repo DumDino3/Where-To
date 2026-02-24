@@ -230,6 +230,13 @@
       "dependencies": {},
       "hash": "608d08904508f20b106b27ae2f7c12e2cde45191"
     },
+    "questsystem": {
+      "version": "https://github.com/lluispalerm/QuestSystem.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "ee1949421349b059c74b97b36f968dc11bdec539"
+    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,
