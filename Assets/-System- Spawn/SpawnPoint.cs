@@ -12,7 +12,7 @@ public class SpawnPoint : MonoBehaviour
     [Header("Gizmo Settings")]
     [SerializeField] private Color gizmoColor = new Color(0f, 1f, 0f, 0.25f);
     [SerializeField] private Color gizmoWireColor = Color.green;
-
+    [SerializeField] private Color selectedGizmoColor = new Color(1f, 0.92f, 0.016f, 0.4f); // Yellow
 
     private void OnValidate()
     {
@@ -31,7 +31,6 @@ public class SpawnPoint : MonoBehaviour
         {
             SphereManipulate();
         }
-        
     }
 
     private void SphereManipulate()
@@ -42,19 +41,25 @@ public class SpawnPoint : MonoBehaviour
             sphereCollider = gameObject.AddComponent<SphereCollider>();
         }
         sphereCollider.radius = sphereCastRadius;
+        sphereCollider.isTrigger = true; // Prevents physics bumps in editor
     }
-
 
     #region Gizmos
     private void OnDrawGizmos()
     {
-        DrawSphereColliderGizmo();
+        DrawSphereColliderGizmo(false);
     }
-    private void DrawSphereColliderGizmo()
+
+    private void OnDrawGizmosSelected()
+    {
+        DrawSphereColliderGizmo(true);
+    }
+
+    private void DrawSphereColliderGizmo(bool isSelected)
     {
         SphereCollider sphereCollider = GetComponent<SphereCollider>();
-        if (sphereCollider == null)
-            return;
+        if (sphereCollider == null) return;
+
         Vector3 worldCenter = transform.TransformPoint(sphereCollider.center);
         
         float maxScale = Mathf.Max(
@@ -63,13 +68,13 @@ public class SpawnPoint : MonoBehaviour
             Mathf.Abs(transform.lossyScale.z)
         );
         float worldRadius = sphereCollider.radius * maxScale;
-        Gizmos.color = gizmoColor;
+
+        // Swap colors if selected
+        Gizmos.color = isSelected ? selectedGizmoColor : gizmoColor;
         Gizmos.DrawSphere(worldCenter, worldRadius);
-        Gizmos.color = gizmoWireColor;
+        
+        Gizmos.color = isSelected ? Color.yellow : gizmoWireColor;
         Gizmos.DrawWireSphere(worldCenter, worldRadius);
     }
-    
-
     #endregion
-
 }

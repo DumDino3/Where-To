@@ -157,6 +157,7 @@ public class SpawnEditorManager : EditorWindow
             if (spawnDirector != null)
             {
                 newSpawn.transform.SetParent(spawnDirector.transform);
+                Selection.activeGameObject = newSpawn;
                 SpawnPointsDirector spawnPointsDirector = spawnDirector.GetComponent<SpawnPointsDirector>();
                 spawnPointsDirector.AddSpawnPoint(newSpawn.GetComponent<SpawnPoint>());
             }
