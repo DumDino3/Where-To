@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5209808719684886086}
   - component: {fileID: 1377250780154526297}
   m_Layer: 6
-  m_Name: SpawnPoint
+  m_Name: Spawn Point 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,11 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ea9538dfa372445896c51e35bd07d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
-  spawnPointID: 
-  sphereCastRadius: 7.2
-  showGizmos: 1
-  isActive: 1
-  debugLogging: 0
+  spawnPointID: 0
+  sphereCastRadius: 1
+  gizmoColor: {r: 0, g: 1, b: 0, a: 0.25}
+  gizmoWireColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!135 &1377250780154526297
 SphereCollider:
   m_ObjectHideFlags: 0

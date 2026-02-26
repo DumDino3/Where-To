@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine.UIElements;
 
 public class SpawnEditorManager : EditorWindow
 {
+    static event Action OnSpawnPointCreated;
+    
+    
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset = default;
 
@@ -16,6 +20,7 @@ public class SpawnEditorManager : EditorWindow
 
     // data
     private GameObject spawnPointPrefab;
+    private GameObject spawnDirector;
 
     // logic
     private Vector3 spawnPointPosition;
@@ -88,8 +93,8 @@ public class SpawnEditorManager : EditorWindow
     {
         DetectNormal(isPlacing);
         placeSpawn();
+        RegisterDirector();
 
-        // Optionally, draw something to visualize the hit
         if (isPlacing && detectedPoint != Vector3.zero)
         {
             Handles.color = Color.green;
@@ -105,6 +110,13 @@ public class SpawnEditorManager : EditorWindow
         
         sceneView.Repaint();
     }
+
+    private void RegisterDirector()
+    {
+        spawnDirector = GameObject.FindWithTag("SpawnDirector");
+    }
+    
+    #region SpawnLogic
 
     //working it ass off to detect for the face
     private void DetectNormal(bool isSpawnMode)
@@ -135,17 +147,37 @@ public class SpawnEditorManager : EditorWindow
             detectedPoint = hit.point;
         }
     }
-
     private void placeSpawn()
     {
         Event e = Event.current;
 
         if (e != null && e.type == EventType.MouseDown && e.button == 0 && isPlacing)
         {
-            Instantiate(spawnPointPrefab, spawnPointPosition, spawnPointPrefab.transform.rotation);
+            GameObject newSpawn = Instantiate(spawnPointPrefab, spawnPointPosition, spawnPointPrefab.transform.rotation);
+            if (spawnDirector != null)
+            {
+                newSpawn.transform.SetParent(spawnDirector.transform);
+                SpawnPointsDirector spawnPointsDirector = spawnDirector.GetComponent<SpawnPointsDirector>();
+                spawnPointsDirector.AddSpawnPoint(newSpawn.GetComponent<SpawnPoint>());
+            }
             e.Use();
             GUIUtility.hotControl = 0;
+            FlagSpawnPoint();
+            
         }
     }
+
+    #endregion
+
+
+
+    private void FlagSpawnPoint()
+    {
+        
+    }
+
+    
+    
+    
 
 }
