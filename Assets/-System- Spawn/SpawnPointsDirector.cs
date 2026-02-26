@@ -16,8 +16,28 @@ public class SpawnPointsDirector : MonoBehaviour
         public int spawnPointID; 
     }
 
-    private void OnEnable() => SpawnPoint.onSpawnPointChanged += CleanAndFlush;
-    private void OnDisable() => SpawnPoint.onSpawnPointChanged -= CleanAndFlush;
+    private void OnEnable()
+    {
+        SpawnPoint.onSpawnPointChanged += CleanAndFlush;
+        SpawnPaceManager.OnSpawnPointChanged += ActivateSpawnPointByID;
+    }
+
+    private void OnDisable()
+    {
+        SpawnPoint.onSpawnPointChanged -= CleanAndFlush;
+        SpawnPaceManager.OnSpawnPointChanged -= ActivateSpawnPointByID;
+    }
+
+    
+    
+    private void Update()
+    {
+        if (!Application.isPlaying)
+        {
+            DisableAllChildren();
+        }
+    }
+
 
     public void AddSpawnPoint(SpawnPoint newPoint)
     {
@@ -38,5 +58,27 @@ public class SpawnPointsDirector : MonoBehaviour
                 spawnPointID = sp.spawnPoint.spawnPointID
             })
             .ToList();
+    }
+    
+    public void DisableAllChildren()
+    {
+        foreach (var data in spawnPointsList)
+        {
+            if (data.spawnPoint != null)
+            {
+                data.spawnPoint.gameObject.SetActive(false);
+            }
+        }
+    }
+    
+    private void ActivateSpawnPointByID(int targetID)
+    {
+        foreach (var data in spawnPointsList)
+        {
+            if (data.spawnPoint != null)
+            {
+                data.spawnPoint.gameObject.SetActive(data.spawnPointID == targetID);
+            }
+        }
     }
 }
