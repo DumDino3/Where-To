@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/UI%20Editor/Spawn%20Editor/SpawnEditorManager.uss?fileID=7433441132597879392&amp;guid=058a9747ff0ca7743ab3336ee232d3df&amp;type=3#SpawnEditorManager"/>
+    <ui:VisualElement style="flex-grow: 1;">
+        <uie:LayerMaskField label="LayerMask"/>
+        <uie:ObjectField label="Spawn Point&#10;" name="SpawnPoint"/>
+        <ui:Button text="Create Spawn Point&#10;" name="CreatSpawn"/>
+        <ui:Button text="Cancel&#10;" name="Cancel"/>
+    </ui:VisualElement>
+</ui:UXML>
