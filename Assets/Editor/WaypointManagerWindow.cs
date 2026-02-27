@@ -40,7 +40,8 @@ public class WaypointManagerWindow : EditorWindow
         Selection.activeObject = go;
     }
 
-    private void ConnectManual()
+    
+    static void ConnectManual()
     {
         Waypoint[] selected = Selection.GetFiltered<Waypoint>(SelectionMode.Deep);
         if (selected.Length < 2) return;
@@ -54,4 +55,30 @@ public class WaypointManagerWindow : EditorWindow
             }
         }
     }
+    static void RemoveConnction()
+    {
+        Waypoint[] selected = Selection.GetFiltered<Waypoint>(SelectionMode.Deep);
+        if (selected.Length < 2) return;
+
+        for (int i = 0; i < selected.Length; i++)
+        {
+            for (int j = 0; j < selected.Length; j++)
+            {
+                if (i != j && !selected[i].connectedWaypoints.Remove(selected[j]))
+                    selected[i].connectedWaypoints.Remove(selected[j]);
+            }
+        }
+    }
+
+    [MenuItem("CONTEXT/Waypoint/Connect waypoints")]
+    static void CreateWaypointMenu()
+    {
+        ConnectManual();
+    }
+    [MenuItem("CONTEXT/Waypoint/Destroy the bond between waypoints")]
+    static void DestroyWaypointMenu()
+    {
+        RemoveConnction();
+    }
+    
 }
