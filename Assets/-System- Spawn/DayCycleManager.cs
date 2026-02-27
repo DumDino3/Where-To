@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DayCycleManager : MonoBehaviour
@@ -16,6 +17,10 @@ public class DayCycleManager : MonoBehaviour
 
     [Header("Debug time")] 
     public float currentSegTimeRemaining;
+
+    public static event Action onDayStarted;
+    public static event Action onDayEnded;
+    public static event Action<int> onTimeSegsChanged;
     
     
     
@@ -32,7 +37,6 @@ public class DayCycleManager : MonoBehaviour
     #region Day System
     private void EstablishSegs()
     {
-        currentTimeSeg = 1;
         currentActualTime = 0;
         totalTime = timeSegs * timePerSegs;
     }
@@ -41,11 +45,12 @@ public class DayCycleManager : MonoBehaviour
         
         if (currentTimeSeg <= timeSegs && isDayStarted == true)
         {
-            
+            onDayStarted?.Invoke();
             currentActualTime += Time.deltaTime;
             if (currentActualTime >= timePerSegs)
             {
                 currentTimeSeg += 1;
+                onTimeSegsChanged?.Invoke(currentTimeSeg);
                 currentActualTime = 0;
             }
         }

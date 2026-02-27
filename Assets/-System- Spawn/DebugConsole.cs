@@ -3,6 +3,7 @@ using UnityEngine;
 public class DebugConsole : MonoBehaviour
 {
     private SpawnPaceManager manager;
+    private DayCycleManager daycycleManager;
 
     [RuntimeInitializeOnLoadMethod]
     static void Init()
@@ -15,6 +16,7 @@ public class DebugConsole : MonoBehaviour
     void Start()
     {
         manager = FindObjectOfType<SpawnPaceManager>();
+        daycycleManager = FindObjectOfType<DayCycleManager>();
     }
 
     void OnGUI()
@@ -24,10 +26,10 @@ public class DebugConsole : MonoBehaviour
         if (manager != null)
         {
             GUI.Label(new Rect(10, 30, 300, 20),
-                "Current Segment: " + manager.currentTimeSeg);
+                "Current Segment: " + daycycleManager.currentTimeSeg);
 
             GUI.Label(new Rect(10, 50, 300, 20),
-                "Time Remaining: " + manager.currentActualTime.ToString("F2"));
+                "Time Remaining: " + daycycleManager.currentActualTime.ToString("F2"));
         }
     }
 }

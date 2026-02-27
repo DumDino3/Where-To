@@ -13,6 +13,8 @@ public class SpawnPaceManager : MonoBehaviour
         private int pickUpId;
         private int dropOffId;
     }
+
+    [Header("Current Time")] public int currentTime;
     
     [SerializeField]
     int travelIDRaw;
@@ -29,7 +31,31 @@ public class SpawnPaceManager : MonoBehaviour
     public static event Action<int> OnSpawnPointChanged; //this command the director
     
     public static event Action<int> OnChunkChanged;
+
+    private void OnEnable()
+    {
+        DayCycleManager.onDayStarted += BeginDay;
+        DayCycleManager.onTimeSegsChanged += TimeSegsChanged;
+    }
     
+    private void OnDisable()
+    {
+        DayCycleManager.onDayStarted -= BeginDay;
+        DayCycleManager.onTimeSegsChanged -= TimeSegsChanged;
+    }
+
+
+    private void BeginDay()
+    {
+        
+    }
+
+    private void TimeSegsChanged(int currentTimeSeg)
+    {
+        currentTime = currentTimeSeg;
+    }
+    
+
     enum CurrentTaxiState
     {
         PickUp,
