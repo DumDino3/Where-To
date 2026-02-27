@@ -46,9 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnPoint
   spawnPointID: 0
-  sphereCastRadius: 1
+  sphereCastRadius: 0.82
   gizmoColor: {r: 0, g: 1, b: 0, a: 0.25}
   gizmoWireColor: {r: 0, g: 1, b: 0, a: 1}
+  selectedGizmoColor: {r: 1, g: 0.92, b: 0.016, a: 0.4}
 --- !u!135 &1377250780154526297
 SphereCollider:
   m_ObjectHideFlags: 0
