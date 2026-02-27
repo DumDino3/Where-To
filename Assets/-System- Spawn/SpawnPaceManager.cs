@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class SpawnPaceManager : MonoBehaviour
 {
+    //hmm if any id being set to 00 or null te system must register random 
+    
     public class dataPackage
     {
+        private int timeSeg;
         private int duration;
         private int pickUpId;
         private int dropOffId;
     }
-    
-    
     
     [SerializeField]
     int travelIDRaw;
@@ -22,59 +23,7 @@ public class SpawnPaceManager : MonoBehaviour
     [SerializeField] private int currentID;
     [SerializeField] private int pickUpID;
     [SerializeField] private int dropOffID;
-
-    [Header("Day settings")] 
-    public int timeSegs;
-    public float timePerSegs;
-    public int currentTimeSeg;
-
-    public bool isDayStarted;
-
-
-    public float currentActualTime;
-    private float totalTime;
-
-    [Header("Debug time")] 
-    public float currentSegTimeRemaining;
-
-    private void Start()
-    {
-        EstablishSegs();
-    }
-
-    private void Update()
-    {
-        StartDay();
-    }
-
-    private void EstablishSegs()
-    {
-        currentTimeSeg = 1;
-        currentActualTime = 0;
-        totalTime = timeSegs * timePerSegs;
-    }
-    private void StartDay()
-    {
-        
-        if (currentTimeSeg <= timeSegs && isDayStarted == true)
-        {
-            
-            currentActualTime += Time.deltaTime;
-            if (currentActualTime >= timePerSegs)
-            {
-                currentTimeSeg += 1;
-                currentActualTime = 0;
-            }
-        }
-        else
-        {
-            Debug.Log(timeSegs + "done day");
-        }
-        
-        
-        
-    }
-
+    
     [SerializeField] private CurrentTaxiState currentState;
 
     public static event Action<int> OnSpawnPointChanged; //this command the director
