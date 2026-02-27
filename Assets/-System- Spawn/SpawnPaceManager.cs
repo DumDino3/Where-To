@@ -45,6 +45,36 @@ public class SpawnPaceManager : MonoBehaviour
     }
 
 
+    private void Start()
+    {
+        InitializingQuest();
+    }
+
+
+    public void OverrideCurrentPoints()
+    {
+        //this will override the current active point but what about disable it ?
+    }
+
+    public void PushDataIntoQueue(int currentTimeSeg)
+    {
+        //This will be the worker who will fget the data from the quest for each time segment
+        //and also check if the data require specific segment it would push that into queue instead of random from pool
+        //but will this performance taxing ?
+        
+        //but this script should only push but will not display them all at once right ?
+        //Like it should put all of them into that interval queue all call it one by one
+        //we can use some priority system to always push a quest higher to display sooner than any quests
+        
+        // note:it should wait till the state of the taxi reach idle state to push the quest (for now)
+    }
+
+    private void InitializingQuest()
+    {
+        //This will intialize the pool of that day quest
+    }
+    
+
     private void BeginDay()
     {
         
