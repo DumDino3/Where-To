@@ -16,23 +16,6 @@ MonoBehaviour:
   downsampleDepthShader: {fileID: 4800000, guid: cffeaeec0396a2c4dad475266cc8dfeb,
     type: 3}
   volumetricFogShader: {fileID: 4800000, guid: 08f816187f9af0244a95556ee0cab83f, type: 3}
---- !u!114 &-5541255425353497169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f15c3bed367adf64da6316ae42ef95dc, type: 3}
-  m_Name: BetterFogFeature
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  settings:
-    Event: 550
-    _UseCustomDepthTexture: 1
-    _UseFogOffsetTexture: 1
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,8 +71,7 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
   - {fileID: -7828878500387179017}
-  - {fileID: -5541255425353497169}
-  m_RendererFeatureMap: adc0de57c6d2eee5f7b5baaa7b3c5a93af4519aa8c8119b3
+  m_RendererFeatureMap: adc0de57c6d2eee5f7b5baaa7b3c5a93
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
