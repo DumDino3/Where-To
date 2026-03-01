@@ -1,0 +1,4 @@
+ID,NPC,DIALOGUE,SPAWN,DESTINATION
+40001,npc_hannah,30001,map_downtown,map_airport
+40002,npc_billy,30002,map_suburb,map_downtown
+40003,npc_tony,30003,map_airport,map_suburb
