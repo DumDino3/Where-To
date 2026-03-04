@@ -56,7 +56,6 @@ public class DayCycleManager : MonoBehaviour
         }
         else
         {
-            Debug.Log(timeSegs + "done day");
         }
         
     }

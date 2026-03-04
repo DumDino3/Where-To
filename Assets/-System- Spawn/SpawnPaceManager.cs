@@ -5,26 +5,28 @@ using UnityEngine;
 public class SpawnPaceManager : MonoBehaviour
 {
     //hmm if any id being set to 00 or null te system must register random 
-    
-    public class dataPackage
-    {
-        private int timeSeg;
-        private int duration;
-        private int pickUpId;
-        private int dropOffId;
-    }
 
+    public List<string> dataPackage = new List<string>();
+    
+    
+    [Header("Runtime Data")] 
+    public int CurrentID;
+    
     [Header("Current Time")] public int currentTime;
     
-    [SerializeField]
-    int travelIDRaw;
-
-    public int chunkSize = 4;
-    [SerializeField] private int duration;
-    [SerializeField] private int priority;
-    [SerializeField] private int currentID;
-    [SerializeField] private int pickUpID;
+    
+    [Header("Parsed Data")]
+    [SerializeField] private int durationID;
+    [SerializeField] private int pickupID;
     [SerializeField] private int dropOffID;
+    [SerializeField] private int priorityID;
+    
+   
+ 
+
+    
+    
+    private int questLimits = 30; 
     
     [SerializeField] private CurrentTaxiState currentState;
 
@@ -36,44 +38,44 @@ public class SpawnPaceManager : MonoBehaviour
     {
         DayCycleManager.onDayStarted += BeginDay;
         DayCycleManager.onTimeSegsChanged += TimeSegsChanged;
+        RandomRequestGen.onQuestGenerated += PushDataIntoQueue;
     }
     
     private void OnDisable()
     {
         DayCycleManager.onDayStarted -= BeginDay;
         DayCycleManager.onTimeSegsChanged -= TimeSegsChanged;
+        RandomRequestGen.onQuestGenerated -= PushDataIntoQueue;
     }
 
 
     private void Start()
     {
-        InitializingQuest();
     }
 
+    
+    #region Progression System
 
     public void OverrideCurrentPoints()
     {
         //this will override the current active point but what about disable it ?
     }
 
-    public void PushDataIntoQueue(int currentTimeSeg)
+    
+    public void PushDataIntoQueue(string questID)
     {
-        //This will be the worker who will fget the data from the quest for each time segment
-        //and also check if the data require specific segment it would push that into queue instead of random from pool
-        //but will this performance taxing ?
-        
-        //but this script should only push but will not display them all at once right ?
-        //Like it should put all of them into that interval queue all call it one by one
-        //we can use some priority system to always push a quest higher to display sooner than any quests
-        
-        // note:it should wait till the state of the taxi reach idle state to push the quest (for now)
+            dataPackage.Add(questID);
     }
 
-    private void InitializingQuest()
+
+    public void PushDataIntoLive(int currentTimeSeg)
     {
-        //This will intialize the pool of that day quest
+        int randomIndex = UnityEngine.Random.Range(0, dataPackage.Count);
+        ParsingId(dataPackage[randomIndex]);
+
     }
-    
+
+    #endregion
 
     private void BeginDay()
     {
@@ -83,6 +85,7 @@ public class SpawnPaceManager : MonoBehaviour
     private void TimeSegsChanged(int currentTimeSeg)
     {
         currentTime = currentTimeSeg;
+        PushDataIntoLive(currentTimeSeg);
     }
     
 
@@ -95,29 +98,38 @@ public class SpawnPaceManager : MonoBehaviour
 
 
     [ContextMenu("Parse Travel ID")]
-    private void ParsingId()
+    private void ParsingId(string travelIDRaw)
     {
-        duration = travelIDRaw / 1000;
-        pickUpID = travelIDRaw / 1000000;
-        dropOffID = travelIDRaw % 100000;
-        priority = dropOffID % 1000;
+        //convert the string to span so that we can slice it without creating new string instances, improving performance <3
+        ReadOnlySpan<char> travelIDChar =  travelIDRaw.AsSpan();
+
+        durationID = int.Parse(travelIDChar.Slice(0,3));
+        pickupID = int.Parse(travelIDChar.Slice(3,3));
+        dropOffID = int.Parse(travelIDChar.Slice(6,3));
+        priorityID = int.Parse(travelIDChar.Slice(9,2));
 
     }
 
-    [ContextMenu("Test Spawn Event")]
+    
+
     private void TestSpawnEvent()
     {
         switch (currentState)
         {
             case CurrentTaxiState.PickUp:
-                OnSpawnPointChanged?.Invoke(pickUpID);
-                Debug.Log($"Invocated PickUp event with ID: {pickUpID}");
+                CurrentID = pickupID;
                 break;
 
             case CurrentTaxiState.DropOff:
-                OnSpawnPointChanged?.Invoke(dropOffID);
-                Debug.Log($"Invocated DropOff event with ID: {dropOffID}");
+                CurrentID = dropOffID;
                 break;
         }
+    }
+    
+    [ContextMenu("Test Spawn Event")]
+    private void TestSpawnEventContext()
+    {
+        TestSpawnEvent();
+        OnSpawnPointChanged?.Invoke(CurrentID);
     }
 }
