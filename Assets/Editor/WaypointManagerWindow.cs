@@ -40,7 +40,8 @@ public class WaypointManagerWindow : EditorWindow
         Selection.activeObject = go;
     }
 
-    private void ConnectManual()
+    //we can nest them together for leaner code but maybe later :)
+    static void ConnectManual()
     {
         Waypoint[] selected = Selection.GetFiltered<Waypoint>(SelectionMode.Deep);
         if (selected.Length < 2) return;
@@ -54,4 +55,47 @@ public class WaypointManagerWindow : EditorWindow
             }
         }
     }
+    static void RemoveConnction()
+    {
+        Waypoint[] selected = Selection.GetFiltered<Waypoint>(SelectionMode.Deep);
+        if (selected.Length < 2) return;
+
+        for (int i = 0; i < selected.Length; i++)
+        {
+            for (int j = 0; j < selected.Length; j++)
+            {
+                if (i != j && !selected[i].connectedWaypoints.Remove(selected[j]))
+                    selected[i].connectedWaypoints.Remove(selected[j]);
+            }
+        }
+    }
+
+    static void RemoveWaypoint()
+    {
+        Waypoint[] selected = Selection.GetFiltered<Waypoint>(SelectionMode.Deep);
+        for (int i = 0; i < selected.Length; i++)
+        {
+            DestroyImmediate(selected[i].gameObject);
+        }
+    }
+    //this chunk ^^^^^^^^^^^
+
+    
+    [MenuItem("CONTEXT/Waypoint/Connect waypoints")]
+    static void CreateWaypointMenu()
+    {
+        ConnectManual();
+    }
+    [MenuItem("CONTEXT/Waypoint/Destroy the bond between waypoints")]
+    static void DestroyConnection()
+    {
+        RemoveConnction();
+    }
+    [MenuItem("CONTEXT/Waypoint/Destroy the waypoints/You sure?/Yes destroy them all")]
+    static void DestroyWaypointMenu()
+    {
+        
+        RemoveWaypoint();
+    }
+    
 }

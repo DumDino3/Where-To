@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Car
   - VCams
+  - SpawnDirector
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - SpawnPoint
   - 
   - 
   - 

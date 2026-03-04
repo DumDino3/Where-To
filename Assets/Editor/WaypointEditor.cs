@@ -9,9 +9,9 @@ static public class WaypointEditor
     [DrawGizmo(GizmoType.NonSelected | GizmoType.Selected | GizmoType.Pickable | GizmoType.Active)]
     public static void OnDrawSceneGizmo(Waypoint waypoint, GizmoType gizmoType)
     {
-        Gizmos.DrawSphere(waypoint.transform.position, 0.5f);
 
-        Gizmos.color = Color.yellow;
+        Gizmos.color = (gizmoType & GizmoType.Selected) != 0 ? Color.yellow : Color.whiteSmoke;
+        Gizmos.DrawSphere(waypoint.transform.position, 0.5f);
 
         foreach (Waypoint connectedWaypoint in waypoint.connectedWaypoints)
         {
