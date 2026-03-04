@@ -40,19 +40,4 @@ public abstract class StateMachine<EState> : MonoBehaviour where EState : Enum
         queuedState = stateKey;
         hasQueuedState = true;
     }
-
-    protected virtual void OnTriggerEnter(Collider other)
-    {
-        CurrentState.OnTriggerEnter(other);
-    }
-
-    protected virtual void OnTriggerStay(Collider other)
-    {
-        CurrentState.OnTriggerStay(other);
-    }
-
-    protected virtual void OnTriggerExit(Collider other)
-    {
-        CurrentState.OnTriggerExit(other);
-    }
 }

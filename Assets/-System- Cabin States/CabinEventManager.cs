@@ -23,7 +23,20 @@ public class CabinEventManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void OnPickup(int rideRequestID)
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            TryPickup(currentRide.ID);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Dropoff();
+        }
+    }
+
+    public void TryPickup(int rideRequestID)
     {
         RideRequest data = DataParser.Instance.GetRideRequest(rideRequestID);
         if (data == null)
@@ -36,7 +49,7 @@ public class CabinEventManager : MonoBehaviour
         OnRideStarted?.Invoke();
     }
 
-    public void OnDropoff()
+    public void Dropoff()
     {
         OnRideEnded?.Invoke();
         currentRide = null;
