@@ -8,6 +8,7 @@ public class CabinEventManager : MonoBehaviour
     public static CabinEventManager Instance { get; private set; }
 
     public RideRequest currentRide { get; private set; }
+    public int requestID;
 
     public event Action OnRideStarted;
     public event Action OnRideEnded;
@@ -27,7 +28,7 @@ public class CabinEventManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            TryPickup(currentRide.ID);
+            TryPickup();
         }
 
         if (Input.GetKeyDown(KeyCode.L))
@@ -36,12 +37,12 @@ public class CabinEventManager : MonoBehaviour
         }
     }
 
-    public void TryPickup(int rideRequestID)
+    public void TryPickup()
     {
-        RideRequest data = DataParser.Instance.GetRideRequest(rideRequestID);
+        RideRequest data = DataParser.GetRideRequest(requestID);
         if (data == null)
         {
-            Debug.LogWarning($"CabinEventManager: No ride request found with ID {rideRequestID}.");
+            Debug.LogWarning($"CabinEventManager: No ride request found with ID {requestID}.");
             return;
         }
 
