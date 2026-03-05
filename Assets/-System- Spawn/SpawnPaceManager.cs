@@ -7,15 +7,6 @@ public class SpawnPaceManager : MonoBehaviour
 {
     //hmm if any id being set to 00 or null te system must register random 
 
-    public class LiveRequestData
-    {
-        public int Duration;
-        public int PickupID;
-        public int DropOffID;
-    }
-    
-    public List<LiveRequestData> liveRequestDataList = new List<LiveRequestData>();
-    
 
     public List<int> requestID = new List<int>();
     public Dictionary<int, List<int>> requestDict = new Dictionary<int, List<int>>();
@@ -24,6 +15,10 @@ public class SpawnPaceManager : MonoBehaviour
     public int CurrentID;
     
     [Header("Current Time")] public int currentTime;
+    
+    [Header("Quest Manager")]
+    public int currentActiveQuests;
+    
     
     
     [Header("Parsed Data")]
@@ -37,10 +32,18 @@ public class SpawnPaceManager : MonoBehaviour
     
     [SerializeField] private CurrentTaxiState currentState;
 
-    public static event Action<int> OnSpawnPointChanged; //this command the director
-    
-    public static event Action<int> OnChunkChanged;
 
+    // ======= Events ========================================================================================================
+
+    public static event Action<int> OnSpawnPointChanged; //this command the director
+    public static event Action<int> OnChunkChanged;
+    public static event  Action<int,int,int> OnRequestSpawned;
+    
+    // ======= Events ========================================================================================================
+
+
+
+    #region Events Initialization
     private void OnEnable()
     {
         DayCycleManager.onTimeSegsChanged += TimeSegsChanged;
@@ -54,6 +57,10 @@ public class SpawnPaceManager : MonoBehaviour
         RandomRequestGen.onQuestGenerated -= PushDataIntoQueue;
         DayCycleManager.initializeTimeSeg -= InitilizeTimeSegmentDict;
     }
+    
+
+    #endregion
+  
 
 
     private void Start()
@@ -96,8 +103,8 @@ public class SpawnPaceManager : MonoBehaviour
             
             foreach (int requestID in sortedPriority)
             {
-                ParsingId(requestID.ToString());
-                OnSpawnPointChanged?.Invoke(CurrentID);
+                var(duration, pickup, dropoff) = ParsingId(requestID.ToString());
+                OnRequestSpawned(duration, pickup, dropoff);
             }
         }
     }
@@ -119,16 +126,17 @@ public class SpawnPaceManager : MonoBehaviour
     }
 
 
-    private void ParsingId(string travelIDRaw)
+    private (int dur, int pick, int drop) ParsingId(string travelIDRaw)
     {
         //convert the string to span so that we can slice it without creating new string instances, improving performance <3
         ReadOnlySpan<char> travelIDChar =  travelIDRaw.AsSpan();
-        liveRequestDataList.Add(new LiveRequestData
-        {
-            Duration = int.Parse(travelIDChar.Slice(0,3)),
-            PickupID = int.Parse(travelIDChar.Slice(3,3)),
-            DropOffID = int.Parse(travelIDChar.Slice(6,3))
-        });
+        return
+        (
+        int.Parse(travelIDChar.Slice(0, 3)),
+        int.Parse(travelIDChar.Slice(3, 3)),
+        int.Parse(travelIDChar.Slice(6, 3))
+        );
+        
     }
     
     private void TimeSegParser(string travelIDRaw)
