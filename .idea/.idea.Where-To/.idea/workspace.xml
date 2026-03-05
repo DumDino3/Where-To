@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="71ccb852-356e-4873-a62d-24a01ef63191" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Where-To/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Where-To/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/-System- Spawn/LiveQuestInstance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/-System- Spawn/LiveQuestInstance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/-System- Spawn/LiveQuestPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/-System- Spawn/LiveQuestPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/-System- Spawn/RandomQuestGen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/-System- Spawn/RandomQuestGen.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/-System- Spawn/SpawnPaceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/-System- Spawn/SpawnPaceManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Thang/Thang.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Thang/Thang.unity" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +101,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1772710711213</updated>
-      <workItem from="1772710739584" duration="10191000" />
+      <workItem from="1772710739584" duration="10927000" />
     </task>
     <servers />
   </component>

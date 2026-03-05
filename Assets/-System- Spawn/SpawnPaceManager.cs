@@ -103,7 +103,7 @@ public class SpawnPaceManager : MonoBehaviour
             
             foreach (int requestID in sortedPriority)
             {
-                var(duration, pickup, dropoff) = ParsingId(requestID.ToString());
+                var (duration, pickup, dropoff) = ParsingId(requestID.ToString("D11"));
                 OnRequestSpawned(duration, pickup, dropoff);
             }
         }

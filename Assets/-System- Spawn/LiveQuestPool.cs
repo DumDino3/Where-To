@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LiveQuestPool : MonoBehaviour
 {
-    GameObject liveQuestPrefab;
+    public GameObject liveQuestPrefab;
     
     private int poolLimit = 20;
 
@@ -32,16 +32,16 @@ public class LiveQuestPool : MonoBehaviour
 
     private void EnableLiveQuest(int durationID, int pickupID, int dropOffID)
     {
-        foreach (Transform child in transform)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            if (!child.gameObject.activeSelf)
+            GameObject questObj = transform.GetChild(i).gameObject;
+
+            if (!questObj.activeSelf) 
             {
-                LiveQuestInstance quest = child.GetComponent<LiveQuestInstance>();
-                quest.Initialize(durationID, pickupID, dropOffID);
-       
-                child.gameObject.SetActive(true);
-            
-                return;
+                LiveQuestInstance instance = questObj.GetComponent<LiveQuestInstance>();
+                instance.Initialize(durationID, pickupID, dropOffID);
+                questObj.SetActive(true);
+                return; 
             }
         }
     }
