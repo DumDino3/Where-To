@@ -25,9 +25,9 @@ public class RandomRequestGen : MonoBehaviour
             pickupID = UnityEngine.Random.Range(1, 10);
             dropOffID = UnityEngine.Random.Range(1, 10);
             priorityID = 0;
+            timeSeg = 0;
             
-            string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}";
-            Debug.Log(questID);
+            string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}{timeSeg:D2}";
             onQuestGenerated?.Invoke(questID);
         }
     }

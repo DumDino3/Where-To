@@ -21,6 +21,7 @@ public class DayCycleManager : MonoBehaviour
     public static event Action onDayStarted;
     public static event Action onDayEnded;
     public static event Action<int> onTimeSegsChanged;
+    public static event Action<int> initializeTimeSeg;
     
     
     
@@ -39,6 +40,10 @@ public class DayCycleManager : MonoBehaviour
     {
         currentActualTime = 0;
         totalTime = timeSegs * timePerSegs;
+        for (int i = 0; i < timeSegs; i++)
+        {
+            initializeTimeSeg.Invoke(i);
+        }
     }
     private void StartDay()
     {

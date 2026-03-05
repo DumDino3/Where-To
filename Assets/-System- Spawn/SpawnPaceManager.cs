@@ -1,13 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnPaceManager : MonoBehaviour
 {
     //hmm if any id being set to 00 or null te system must register random 
 
-    public List<string> dataPackage = new List<string>();
+    public class LiveRequestData
+    {
+        public int Duration;
+        public int PickupID;
+        public int DropOffID;
+    }
     
+    public List<LiveRequestData> liveRequestDataList = new List<LiveRequestData>();
+    
+
+    public List<int> requestID = new List<int>();
+    public Dictionary<int, List<int>> requestDict = new Dictionary<int, List<int>>();
     
     [Header("Runtime Data")] 
     public int CurrentID;
@@ -20,11 +31,7 @@ public class SpawnPaceManager : MonoBehaviour
     [SerializeField] private int pickupID;
     [SerializeField] private int dropOffID;
     [SerializeField] private int priorityID;
-    
-   
- 
-
-    
+    [SerializeField] private int timeSegID;
     
     private int questLimits = 30; 
     
@@ -36,21 +43,22 @@ public class SpawnPaceManager : MonoBehaviour
 
     private void OnEnable()
     {
-        DayCycleManager.onDayStarted += BeginDay;
         DayCycleManager.onTimeSegsChanged += TimeSegsChanged;
         RandomRequestGen.onQuestGenerated += PushDataIntoQueue;
+        DayCycleManager.initializeTimeSeg += InitilizeTimeSegmentDict;
     }
     
     private void OnDisable()
     {
-        DayCycleManager.onDayStarted -= BeginDay;
         DayCycleManager.onTimeSegsChanged -= TimeSegsChanged;
         RandomRequestGen.onQuestGenerated -= PushDataIntoQueue;
+        DayCycleManager.initializeTimeSeg -= InitilizeTimeSegmentDict;
     }
 
 
     private void Start()
     {
+        
     }
 
     
@@ -61,26 +69,41 @@ public class SpawnPaceManager : MonoBehaviour
         //this will override the current active point but what about disable it ?
     }
 
-    
-    public void PushDataIntoQueue(string questID)
+    public void InitilizeTimeSegmentDict(int timeSeg)
     {
-            dataPackage.Add(questID);
+        requestDict.Add(timeSeg,new List<int>());
+    }
+
+    
+    public void PushDataIntoQueue(string requestID)
+    {
+        TimeSegParser(requestID);
     }
 
 
     public void PushDataIntoLive(int currentTimeSeg)
     {
-        int randomIndex = UnityEngine.Random.Range(0, dataPackage.Count);
-        ParsingId(dataPackage[randomIndex]);
-
+        
+        if (requestDict.TryGetValue(currentTimeSeg, out List<int> requestIDs))
+        {
+            var sortedPriority = requestIDs.OrderByDescending(singleID =>
+            {
+                string paddedID = singleID.ToString("D11");
+                ReadOnlySpan<char> IDString = paddedID.AsSpan();
+                int priority = int.Parse(IDString.Slice(9, 2));
+                return priority;
+            });
+            
+            foreach (int requestID in sortedPriority)
+            {
+                ParsingId(requestID.ToString());
+                OnSpawnPointChanged?.Invoke(CurrentID);
+            }
+        }
     }
 
     #endregion
-
-    private void BeginDay()
-    {
-        
-    }
+    
 
     private void TimeSegsChanged(int currentTimeSeg)
     {
@@ -96,19 +119,35 @@ public class SpawnPaceManager : MonoBehaviour
     }
 
 
-
-    [ContextMenu("Parse Travel ID")]
     private void ParsingId(string travelIDRaw)
     {
         //convert the string to span so that we can slice it without creating new string instances, improving performance <3
         ReadOnlySpan<char> travelIDChar =  travelIDRaw.AsSpan();
-
-        durationID = int.Parse(travelIDChar.Slice(0,3));
-        pickupID = int.Parse(travelIDChar.Slice(3,3));
-        dropOffID = int.Parse(travelIDChar.Slice(6,3));
-        priorityID = int.Parse(travelIDChar.Slice(9,2));
-
+        liveRequestDataList.Add(new LiveRequestData
+        {
+            Duration = int.Parse(travelIDChar.Slice(0,3)),
+            PickupID = int.Parse(travelIDChar.Slice(3,3)),
+            DropOffID = int.Parse(travelIDChar.Slice(6,3))
+        });
     }
+    
+    private void TimeSegParser(string travelIDRaw)
+    {
+        ReadOnlySpan<char> travelIDChar =  travelIDRaw.AsSpan();
+        int timeSegment;
+        int requestID;
+        timeSegment = int.Parse(travelIDChar.Slice(11,2));
+        requestID = int.Parse(travelIDChar.Slice(0,10));
+        if (requestDict.ContainsKey(timeSegment))
+        {
+            requestDict[timeSegment].Add(requestID);
+        }
+        else if(timeSegment >= requestDict.Keys.Count)
+        {
+            //random
+        }
+    }
+    
 
     
 
