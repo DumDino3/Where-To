@@ -6,6 +6,9 @@ using UnityEngine;
 public class SpawnPaceManager : MonoBehaviour
 {
     //hmm if any id being set to 00 or null te system must register random 
+    
+
+    // ======= Variables ========================================================================================================
 
 
     public List<int> requestID = new List<int>();
@@ -17,8 +20,12 @@ public class SpawnPaceManager : MonoBehaviour
     [Header("Current Time")] public int currentTime;
     
     [Header("Quest Manager")]
-    public int currentActiveQuests;
+    public int currentActiveQuests = 0;
+
+    private bool hasActiveQuest = false;
     
+    
+    private CabinStateMachine.CabinStates previousState;
     
     
     [Header("Parsed Data")]
@@ -30,14 +37,19 @@ public class SpawnPaceManager : MonoBehaviour
     
     private int questLimits = 30; 
     
-    [SerializeField] private CurrentTaxiState currentState;
+    [SerializeField] private CabinStateMachine.CabinStates currentState;
 
 
     // ======= Events ========================================================================================================
 
-    public static event Action<int> OnSpawnPointChanged; //this command the director
-    public static event Action<int> OnChunkChanged;
+    public static event Action<int> OnSpawnPointToggle; //this command the director
+    public static event Action OnCabinStateChanged;
     public static event  Action<int,int,int> OnRequestSpawned;
+    public static event Action OnRequestDone;
+    
+   
+    
+    
     
     // ======= Events ========================================================================================================
 
@@ -49,6 +61,12 @@ public class SpawnPaceManager : MonoBehaviour
         DayCycleManager.onTimeSegsChanged += TimeSegsChanged;
         RandomRequestGen.onQuestGenerated += PushDataIntoQueue;
         DayCycleManager.initializeTimeSeg += InitilizeTimeSegmentDict;
+        
+        //Quest Flagger
+        LiveQuestInstance.onQuestAccepted += RequestActive;
+        //cabin state
+        CabinStateMachine.OnCabinStateChanged += OnCabinStateUpdated;
+
     }
     
     private void OnDisable()
@@ -56,6 +74,11 @@ public class SpawnPaceManager : MonoBehaviour
         DayCycleManager.onTimeSegsChanged -= TimeSegsChanged;
         RandomRequestGen.onQuestGenerated -= PushDataIntoQueue;
         DayCycleManager.initializeTimeSeg -= InitilizeTimeSegmentDict;
+        
+        //Quest Flagger
+        LiveQuestInstance.onQuestAccepted -= RequestActive;
+        //cabin state
+        CabinStateMachine.OnCabinStateChanged -= OnCabinStateUpdated;
     }
     
 
@@ -67,6 +90,8 @@ public class SpawnPaceManager : MonoBehaviour
     {
         
     }
+ 
+
 
     
     #region Progression System
@@ -95,88 +120,87 @@ public class SpawnPaceManager : MonoBehaviour
         {
             var sortedPriority = requestIDs.OrderByDescending(singleID =>
             {
-                string paddedID = singleID.ToString("D11");
+                string paddedID = singleID.ToString("D11"); 
                 ReadOnlySpan<char> IDString = paddedID.AsSpan();
-                int priority = int.Parse(IDString.Slice(9, 2));
+                int priority = int.Parse(IDString.Slice(9, 2)); 
                 return priority;
             });
-            
+
             foreach (int requestID in sortedPriority)
             {
-                var (duration, pickup, dropoff) = ParsingId(requestID.ToString("D11"));
-                OnRequestSpawned(duration, pickup, dropoff);
+                var (duration, pickup, dropoff) = ParsingId(requestID.ToString("D11")); 
+                OnRequestSpawned?.Invoke(duration, pickup, dropoff);
+                currentActiveQuests += 1;
             }
+        }
+    }
+
+    public void RequestActive(int pickup, int dropOff)
+    {
+        if (hasActiveQuest) return;
+
+        pickupID = pickup;
+        dropOffID = dropOff;
+        hasActiveQuest = true;
+
+        OnSpawnPointToggle?.Invoke(pickupID); 
+    }
+
+
+    private void OnCabinStateUpdated(CabinStateMachine.CabinStates state)
+    {
+        currentState = state;
+
+        if (!hasActiveQuest) return;
+
+        if (currentState == CabinStateMachine.CabinStates.Idling)
+        {
+            OnSpawnPointToggle?.Invoke(pickupID);
+        }
+        else if (currentState == CabinStateMachine.CabinStates.Picked)
+        {
+            OnSpawnPointToggle?.Invoke(dropOffID);
+        }
+        else if (currentState == CabinStateMachine.CabinStates.Dropped)
+        {
+            hasActiveQuest = false;
+            OnRequestDone?.Invoke();
         }
     }
 
     #endregion
     
 
+    
+    
     private void TimeSegsChanged(int currentTimeSeg)
     {
         currentTime = currentTimeSeg;
         PushDataIntoLive(currentTimeSeg);
     }
     
-
-    enum CurrentTaxiState
-    {
-        PickUp,
-        DropOff,
-    }
-
+    
 
     private (int dur, int pick, int drop) ParsingId(string travelIDRaw)
     {
-        //convert the string to span so that we can slice it without creating new string instances, improving performance <3
-        ReadOnlySpan<char> travelIDChar =  travelIDRaw.AsSpan();
+        ReadOnlySpan<char> travelIDChar = travelIDRaw.AsSpan();
         return
         (
-        int.Parse(travelIDChar.Slice(0, 3)),
-        int.Parse(travelIDChar.Slice(3, 3)),
-        int.Parse(travelIDChar.Slice(6, 3))
+            int.Parse(travelIDChar.Slice(0, 3)),  // duration
+            int.Parse(travelIDChar.Slice(3, 3)),  // pickup
+            int.Parse(travelIDChar.Slice(6, 3))   // dropoff
         );
-        
     }
     
+    
+    //This part is to parse the data from the str
     private void TimeSegParser(string travelIDRaw)
     {
-        ReadOnlySpan<char> travelIDChar =  travelIDRaw.AsSpan();
-        int timeSegment;
-        int requestID;
-        timeSegment = int.Parse(travelIDChar.Slice(11,2));
-        requestID = int.Parse(travelIDChar.Slice(0,10));
+        ReadOnlySpan<char> travelIDChar = travelIDRaw.AsSpan();
+        int timeSegment = int.Parse(travelIDChar.Slice(11, 2));
+        int requestID   = int.Parse(travelIDChar.Slice(0, 11)); 
+    
         if (requestDict.ContainsKey(timeSegment))
-        {
             requestDict[timeSegment].Add(requestID);
-        }
-        else if(timeSegment >= requestDict.Keys.Count)
-        {
-            //random
-        }
-    }
-    
-
-    
-
-    private void TestSpawnEvent()
-    {
-        switch (currentState)
-        {
-            case CurrentTaxiState.PickUp:
-                CurrentID = pickupID;
-                break;
-
-            case CurrentTaxiState.DropOff:
-                CurrentID = dropOffID;
-                break;
-        }
-    }
-    
-    [ContextMenu("Test Spawn Event")]
-    private void TestSpawnEventContext()
-    {
-        TestSpawnEvent();
-        OnSpawnPointChanged?.Invoke(CurrentID);
     }
 }

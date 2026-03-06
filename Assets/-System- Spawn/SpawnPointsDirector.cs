@@ -19,13 +19,15 @@ public class SpawnPointsDirector : MonoBehaviour
     private void OnEnable()
     {
         SpawnPoint.onSpawnPointChanged += CleanAndFlush;
-        SpawnPaceManager.OnSpawnPointChanged += ActivateSpawnPointByID;
+        SpawnPaceManager.OnSpawnPointToggle += ActivateSpawnPointByID;
+        SpawnPaceManager.OnRequestDone += DisableAllChildren;
     }
 
     private void OnDisable()
     {
         SpawnPoint.onSpawnPointChanged -= CleanAndFlush;
-        SpawnPaceManager.OnSpawnPointChanged -= ActivateSpawnPointByID;
+        SpawnPaceManager.OnSpawnPointToggle -= ActivateSpawnPointByID;
+        SpawnPaceManager.OnRequestDone += DisableAllChildren;
     }
 
     

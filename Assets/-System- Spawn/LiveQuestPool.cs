@@ -7,16 +7,18 @@ public class LiveQuestPool : MonoBehaviour
 {
     public GameObject liveQuestPrefab;
     
-    private int poolLimit = 20;
+    private int poolLimit = 10;
 
     private void OnEnable()
     {
         SpawnPaceManager.OnRequestSpawned += EnableLiveQuest;
+        SpawnPaceManager.OnCabinStateChanged += FlushPool;
     }
 
     private void OnDisable()
     {
         SpawnPaceManager.OnRequestSpawned -= EnableLiveQuest;
+        SpawnPaceManager.OnCabinStateChanged -= FlushPool;
     }
 
     private void Start()
@@ -43,6 +45,15 @@ public class LiveQuestPool : MonoBehaviour
                 questObj.SetActive(true);
                 return; 
             }
+        }
+    }
+    
+    public void FlushPool()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            GameObject questObj = transform.GetChild(i).gameObject;
+            questObj.SetActive(false);
         }
     }
     

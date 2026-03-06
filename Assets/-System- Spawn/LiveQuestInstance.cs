@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class LiveQuestInstance : MonoBehaviour
@@ -9,39 +10,66 @@ public class LiveQuestInstance : MonoBehaviour
     public int dropOffID;
     public float currentTime;
 
+    [Header("UI References")]
+    [SerializeField] private TextMeshProUGUI pickupText;
+    [SerializeField] private TextMeshProUGUI dropOffText;
+    [SerializeField] private TextMeshProUGUI countdownText;
+
+    public static event Action<int, int> onQuestAccepted;
+    public static event Action onQuestExpired;
+
     private void Update()
     {
         StartRequestCycle();
     }
 
-    //this work when the player decides to accept the quest, then it will be pushed to the active quests list. flag it to the pacemanager.
-    public void PushToActive()
-    {
-        
-    }
-
     public void Initialize(int durationID, int pickupID, int dropOffID)
     {
-        // Reset timer to 0
-        currentTime = 0; 
-    
-        // Convert duration (minutes) to total seconds (e.g., 5 min * 60 = 300 seconds)
-        // If durationID is 0, give it a default (like 5 mins) so it doesn't vanish!
-        duration = (durationID > 0) ? durationID * 60 : 300; 
-    
+        currentTime = 0;
+        duration = (durationID > 0) ? durationID * 60 : 300;
         this.pickupID = pickupID;
         this.dropOffID = dropOffID;
+
+        UpdateUI();
     }
 
     private void StartRequestCycle()
     {
         currentTime += Time.deltaTime;
 
-        // While we are still under the time limit, do nothing (keep active)
-        if (currentTime >= duration)
+        float remaining = duration - currentTime;
+        if (remaining <= 0)
         {
-            // Time is up! 
+            onQuestExpired?.Invoke();
             liveQuestPool.ReturnToPool(this);
+            return;
         }
+
+        UpdateCountdown(remaining);
+    }
+
+    private void UpdateUI()
+    {
+        if (pickupText != null)
+            pickupText.text = $"Pickup: {pickupID}";
+
+        if (dropOffText != null)
+            dropOffText.text = $"Drop Off: {dropOffID}";
+    }
+
+    private void UpdateCountdown(float remaining)
+    {
+        if (countdownText == null) return;
+
+        int minutes = Mathf.FloorToInt(remaining / 60);
+        int seconds = Mathf.FloorToInt(remaining % 60);
+        countdownText.text = $"{minutes:00}:{seconds:00}";
+    }
+
+    public void AcceptQuest()
+    {
+        onQuestAccepted?.Invoke(pickupID, dropOffID);
+        Debug.Log("quest accepted");
+        liveQuestPool.ReturnToPool(this);
     }
 }
