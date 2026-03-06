@@ -7,17 +7,17 @@ public class DataParser : MonoBehaviour
 {
     public static DataParser Instance { get; private set; }
 
-    private static Dictionary<int, RideRequest> requestIdDictionary = new Dictionary<int, RideRequest>();
-    public static Dictionary<int, RideRequest> RequestIdDictionary {get{return requestIdDictionary;}}
+    private static Dictionary<int, long> requestIdDictionary = new Dictionary<int, long>();
+    public static Dictionary<int, long> RequestIdDictionary {get{return requestIdDictionary;}}
 
     private static Dictionary<int, DialoguePool> dialogueIdDictionary = new Dictionary<int, DialoguePool>();
     public static Dictionary<int, DialoguePool> DialogueIdDictionary {get{return dialogueIdDictionary;}}
 
-    private static Dictionary<int, LocationPool> locationIdDictionary = new Dictionary<int, LocationPool>();
-    public static Dictionary<int, LocationPool> LocationIdDictionary {get{return locationIdDictionary;}}
+    private static Dictionary<int, long> locationIdDictionary = new Dictionary<int, long>();
+    public static Dictionary<int, long> LocationIdDictionary {get{return locationIdDictionary;}}
 
-    private static Dictionary<int, NpcId> npcIdDictionary = new Dictionary<int, NpcId>();
-    public static Dictionary<int, NpcId> NpcIdDictionary {get{return npcIdDictionary;}}
+    private static Dictionary<int, long> npcIdDictionary = new Dictionary<int, long>();
+    public static Dictionary<int, long> NpcIdDictionary {get{return npcIdDictionary;}}
 
 
     private void Awake()
@@ -57,77 +57,46 @@ public class DataParser : MonoBehaviour
             string line = rideRequestLines[i].Trim();
             if (string.IsNullOrEmpty(line)) continue;
 
-            //Split by "," to separate datas on each line into fields, check if the fields excceeds the dictionary-TValue-class's amount of fields
+            //Split by "," to separate datas on each line into fields
             string[] fields = line.Split(',');
-            if (fields.Length < 9) continue;
+            if (fields.Length < 2) continue;
 
-            //Manually, for each field, by order: trim blank space start and end, then assign each field to a variable
-            //If the assigning fails (field is not an int or is blank) return an error log
-            string name = fields[0].Trim();
+            //Skip field 0, use field 1 as ID (key)
             if (!int.TryParse(fields[1].Trim(), out int id))
             {
                 Debug.LogWarning($"rideRequestDictionary: Could not parse ID on line {i}: '{fields[1]}'");
                 continue;
             }
-            if (!int.TryParse(fields[2].Trim(), out int duration))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse DURATION on line {i}: '{fields[2]}'");
-                continue;
-            }
-            if (!int.TryParse(fields[3].Trim(), out int npc))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse NPC on line {i}: '{fields[3]}'");
-                continue;
-            }
-            if (!int.TryParse(fields[4].Trim(), out int dialogueId))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse DIALOGUE on line {i}: '{fields[4]}'");
-                continue;
-            }
-            if (!int.TryParse(fields[5].Trim(), out int spawn))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse SPAWN on line {i}: '{fields[5]}'");
-                continue;
-            }
-            if (!int.TryParse(fields[6].Trim(), out int destination))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse DESTINATION on line {i}: '{fields[6]}'");
-                continue;
-            }
-            if (!int.TryParse(fields[7].Trim(), out int priority))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse PRIORITY on line {i}: '{fields[7]}'");
-                continue;
-            }
-            if (!int.TryParse(fields[8].Trim(), out int tag))
-            {
-                Debug.LogWarning($"rideRequestDictionary: Could not parse TAG on line {i}: '{fields[8]}'");
-                continue;
-            }
-            
-            //Create a RideRequest instance, then apply the parsed variables above to its fields
-            RideRequest rideRequest = new RideRequest
-            {
-                NAME = name,
-                ID = id,
-                DURATION = duration,
-                NPC = npc,
-                DIALOGUE = dialogueId,
-                SPAWN = spawn,
-                DESTINATION = destination,
-                PRIORITY = priority,
-                TAG = tag
-            };
 
-            requestIdDictionary[id] = rideRequest;
+            //Combine remaining integer fields (fields 2+) into one long int
+            string combinedValue = "";
+            bool validData = true;
+            for (int j = 2; j < fields.Length; j++)
+            {
+                if (!int.TryParse(fields[j].Trim(), out int value))
+                {
+                    Debug.LogWarning($"rideRequestDictionary: Could not parse field {j} on line {i}: '{fields[j]}'");
+                    validData = false;
+                    break;
+                }
+                combinedValue += value.ToString();
+            }
+
+            if (!validData || !long.TryParse(combinedValue, out long combinedInt))
+            {
+                Debug.LogWarning($"rideRequestDictionary: Could not create combined long on line {i}");
+                continue;
+            }
+
+            requestIdDictionary[id] = combinedInt;
         }
 
         Debug.Log($"DataParser: Loaded {requestIdDictionary.Count} ride requests.");
     }
 
-    public static RideRequest GetRideRequest(int id)
+    public static long GetRideRequest(int id)
     {
-        requestIdDictionary.TryGetValue(id, out RideRequest rideRequest);
+        requestIdDictionary.TryGetValue(id, out long rideRequest);
         return rideRequest;
     }
 
@@ -211,35 +180,46 @@ public class DataParser : MonoBehaviour
             string line = locationPoolLines[i].Trim();
             if (string.IsNullOrEmpty(line)) continue;
 
-            //Split by "," to separate datas on each line into fields, check if the fields excceeds the dictionary-TValue-class's amount of fields
+            //Split by "," to separate datas on each line into fields
             string[] fields = line.Split(',');
             if (fields.Length < 2) continue;
 
-            //Manually, for each field, by order: trim blank space start and end, then assign each field to a variable
-            //If the assigning fails (field is not an int or is blank) return an error log
-            string name = fields[0].Trim();
+            //Skip field 0, use field 1 as ID (key)
             if (!int.TryParse(fields[1].Trim(), out int id))
             {
                 Debug.LogWarning($"locationPoolDictionary: Could not parse ID on line {i}: '{fields[1]}'");
                 continue;
             }
 
-            //Create a LocationPool instance, then apply the parsed variables above to its fields
-            LocationPool locationPool = new LocationPool
+            //Combine remaining integer fields (fields 2+) into one long int
+            string combinedValue = "";
+            bool validData = true;
+            for (int j = 2; j < fields.Length; j++)
             {
-                NAME = name,
-                ID = id
-            };
+                if (!int.TryParse(fields[j].Trim(), out int value))
+                {
+                    Debug.LogWarning($"locationPoolDictionary: Could not parse field {j} on line {i}: '{fields[j]}'");
+                    validData = false;
+                    break;
+                }
+                combinedValue += value.ToString();
+            }
 
-            locationIdDictionary[id] = locationPool;
+            if (!validData || !long.TryParse(combinedValue, out long combinedInt))
+            {
+                Debug.LogWarning($"locationPoolDictionary: Could not create combined long on line {i}");
+                continue;
+            }
+
+            locationIdDictionary[id] = combinedInt;
         }
 
         Debug.Log($"DataParser: Loaded {locationIdDictionary.Count} location pools.");
     }
 
-    public static LocationPool GetLocationPool(int id)
+    public static long GetLocationPool(int id)
     {
-        locationIdDictionary.TryGetValue(id, out LocationPool locationPool);
+        locationIdDictionary.TryGetValue(id, out long locationPool);
         return locationPool;
     }
 
@@ -263,39 +243,46 @@ public class DataParser : MonoBehaviour
             string line = npcIdLines[i].Trim();
             if (string.IsNullOrEmpty(line)) continue;
 
-            //Split by "," to separate datas on each line into fields, check if the fields excceeds the dictionary-TValue-class's amount of fields
+            //Split by "," to separate datas on each line into fields
             string[] fields = line.Split(',');
-            if (fields.Length < 4) continue;
+            if (fields.Length < 2) continue;
 
-            //Manually, for each field, by order: trim blank space start and end, then assign each field to a variable
-            //If the assigning fails (field is not an int or is blank) return an error log
-            string name = fields[0].Trim();
+            //Skip field 0, use field 1 as ID (key)
             if (!int.TryParse(fields[1].Trim(), out int id))
             {
                 Debug.LogWarning($"npcIdDictionary: Could not parse ID on line {i}: '{fields[1]}'");
                 continue;
             }
-            string displayname = fields[2].Trim();
-            string tag = fields[3].Trim();
 
-            //Create a NpcId instance, then apply the parsed variables above to its fields
-            NpcId npcId = new NpcId
+            //Combine remaining integer fields (fields 2+) into one long int
+            string combinedValue = "";
+            bool validData = true;
+            for (int j = 2; j < fields.Length; j++)
             {
-                NAME = name,
-                ID = id,
-                DISPLAYNAME = displayname,
-                TAG = tag
-            };
+                if (!int.TryParse(fields[j].Trim(), out int value))
+                {
+                    Debug.LogWarning($"npcIdDictionary: Could not parse field {j} on line {i}: '{fields[j]}'");
+                    validData = false;
+                    break;
+                }
+                combinedValue += value.ToString();
+            }
 
-            npcIdDictionary[id] = npcId;
+            if (!validData || !long.TryParse(combinedValue, out long combinedInt))
+            {
+                Debug.LogWarning($"npcIdDictionary: Could not create combined long on line {i}");
+                continue;
+            }
+
+            npcIdDictionary[id] = combinedInt;
         }
 
         Debug.Log($"DataParser: Loaded {npcIdDictionary.Count} npc ids.");
     }
 
-    public static NpcId GetNpcId(int id)
+    public static long GetNpcId(int id)
     {
-        npcIdDictionary.TryGetValue(id, out NpcId npcId);
+        npcIdDictionary.TryGetValue(id, out long npcId);
         return npcId;
     }
 }
