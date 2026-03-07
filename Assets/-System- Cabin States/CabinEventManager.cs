@@ -7,7 +7,7 @@ public class CabinEventManager : MonoBehaviour
 {
     public static CabinEventManager Instance { get; private set; }
 
-    public RideRequest currentRide { get; private set; }
+    public static string currentRide { get; private set; }
     public int requestID;
 
     public event Action OnRideStarted;
@@ -39,7 +39,7 @@ public class CabinEventManager : MonoBehaviour
 
     public void TryPickup()
     {
-        RideRequest data = DataParser.GetRideRequest(requestID);
+        string data = DataParser.GetRideRequest("40");
         if (data == null)
         {
             Debug.LogWarning($"CabinEventManager: No ride request found with ID {requestID}.");

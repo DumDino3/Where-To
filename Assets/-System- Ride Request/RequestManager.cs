@@ -29,25 +29,25 @@ public class RequestManager : MonoBehaviour
     {
         foreach(int request in requestIDPool)
         {
-            AddRequest(request);
+            //AddRequest(request);
         }
     }
     
-    public void AddRequest(int requestID)
-    {
-        RideRequest data = DataParser.GetRideRequest(requestID);
-        if (data == null)
-        {
-            Debug.LogWarning($"RequestPool: No ride request found with ID {requestID}.");
-            return;
-        }
+    // public void AddRequest(int requestID)
+    // {
+    //     RideRequest data = DataParser.GetRideRequest(requestID);
+    //     if (data == null)
+    //     {
+    //         Debug.LogWarning($"RequestPool: No ride request found with ID {requestID}.");
+    //         return;
+    //     }
 
-        activeRequestPool.Add(data);
-        Debug.Log($"RequestPool: Added ride request {requestID} to pool.");
-    }
+    //     activeRequestPool.Add(data);
+    //     Debug.Log($"RequestPool: Added ride request {requestID} to pool.");
+    // }
 
-    public void RemoveRequest(int rideRequestID)
-    {
-        activeRequestPool.RemoveAll(r => r.ID == rideRequestID);
-    }
+    // public void RemoveRequest(int rideRequestID)
+    // {
+    //     activeRequestPool.RemoveAll(r => r.ID == rideRequestID);
+    // }
 }

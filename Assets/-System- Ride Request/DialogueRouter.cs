@@ -10,7 +10,7 @@ public class DialogueRouter : MonoBehaviour
     IEnumerator StartYap (int time)
     {
         yield return new WaitForSeconds(time);
-        DuringRide();
+        //DuringRide();
     }
     //--------Temporary Brute State Machine-----------
 
@@ -19,59 +19,47 @@ public class DialogueRouter : MonoBehaviour
         dialogueRunner = FindFirstObjectByType<DialogueRunner>();
     }
 
-    public void DuringRide()
-    {
-        RideRequest ride = CabinEventManager.Instance.currentRide;
-        if (ride == null)
-        {
-            Debug.LogWarning("No request to pick up");
-            return;
-        }
+    // public void duringride()
+    // {
+    //     riderequest ride = cabineventmanager.instance.currentride;
+    //     if (ride == null)
+    //     {
+    //         debug.logwarning("no request to pick up");
+    //         return;
+    //     }
         
-        int diagID = ride.DIALOGUE;
-        DialoguePool dialoguePool = DataParser.GetDialoguePool(diagID);
-        dialogueRunner.StartDialogue(dialoguePool.RIDE);
-    }
+    //     int diagid = ride.dialogue;
+    //     dialoguepool dialoguepool = dataparser.getdialoguepool(diagid);
+    //     dialoguerunner.startdialogue(dialoguepool.ride);
+    // }
 
-    private void HandleRideStarted() //Subscribed to OnRideStarted
-    {
-        RideRequest ride = CabinEventManager.Instance.currentRide;
-        if (ride == null)
-        {
-            Debug.LogWarning("No request to pick up");
-            return;
-        }
+    // private void handleridestarted() //subscribed to onridestarted
+    // {
+    //     riderequest ride = cabineventmanager.instance.currentride;
+    //     if (ride == null)
+    //     {
+    //         debug.logwarning("no request to pick up");
+    //         return;
+    //     }
         
-        int diagID = ride.DIALOGUE;
-        DialoguePool dialoguePool = DataParser.GetDialoguePool(diagID);
-        dialogueRunner.StartDialogue(dialoguePool.GETON);
+    //     int diagid = ride.dialogue;
+    //     dialoguepool dialoguepool = dataparser.getdialoguepool(diagid);
+    //     dialoguerunner.startdialogue(dialoguepool.geton);
 
-        StartCoroutine(StartYap(10));
-    }
+    //     startcoroutine(startyap(10));
+    // }
 
-    private void HandleRideEnded() //Subscribed to OnRideEnded
-    {
-        RideRequest ride = CabinEventManager.Instance.currentRide;
-        if (ride == null)
-        {
-            Debug.LogWarning("No passenger to drop");
-            return;
-        }
+    // private void handlerideended() //subscribed to onrideended
+    // {
+    //     riderequest ride = cabineventmanager.instance.currentride;
+    //     if (ride == null)
+    //     {
+    //         debug.logwarning("no passenger to drop");
+    //         return;
+    //     }
         
-        int diagID = ride.DIALOGUE;
-        DialoguePool dialoguePool = DataParser.GetDialoguePool(diagID);
-        dialogueRunner.StartDialogue(dialoguePool.END);
-    }
-
-    private void Start()
-    {
-        CabinEventManager.Instance.OnRideStarted += HandleRideStarted;
-        CabinEventManager.Instance.OnRideEnded += HandleRideEnded;
-    }
-
-    private void OnDisable()
-    {
-        CabinEventManager.Instance.OnRideStarted -= HandleRideStarted;
-        CabinEventManager.Instance.OnRideEnded -= HandleRideEnded;
-    }
+    //     int diagid = ride.dialogue;
+    //     dialoguepool dialoguepool = dataparser.getdialoguepool(diagid);
+    //     dialoguerunner.startdialogue(dialoguepool.end);
+    // }
 }
