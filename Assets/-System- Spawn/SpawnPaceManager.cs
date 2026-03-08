@@ -10,9 +10,9 @@ public class SpawnPaceManager : MonoBehaviour
 
     // ======= Variables ========================================================================================================
 
-
-    public List<int> requestID = new List<int>();
-    public Dictionary<int, List<int>> requestDict = new Dictionary<int, List<int>>();
+    
+    private readonly RequestFlowController _flow = new RequestFlowController();
+    private readonly RequestScheduler _schedule = new RequestScheduler();
     
     [Header("Runtime Data")] 
     public int CurrentID;
@@ -103,74 +103,49 @@ public class SpawnPaceManager : MonoBehaviour
 
     public void InitilizeTimeSegmentDict(int timeSeg)
     {
-        requestDict.Add(timeSeg,new List<int>());
+        _schedule.EnsureSegment(timeSeg);
     }
-
+    
     
     public void PushDataIntoQueue(string requestID)
     {
-        TimeSegParser(requestID);
+        _schedule.TryAddRawQuestId(requestID);
     }
+    
 
+    
 
     public void PushDataIntoLive(int currentTimeSeg)
     {
-        
-        if (requestDict.TryGetValue(currentTimeSeg, out List<int> requestIDs))
+        foreach (int coreId in _schedule.GetSortedCoreIDForSegment(currentTimeSeg))
         {
-            var sortedPriority = requestIDs.OrderByDescending(singleID =>
-            {
-                string paddedID = singleID.ToString("D11"); 
-                ReadOnlySpan<char> IDString = paddedID.AsSpan();
-                int priority = int.Parse(IDString.Slice(9, 2)); 
-                return priority;
-            });
-
-            foreach (int requestID in sortedPriority)
-            {
-                var (duration, pickup, dropoff) = ParsingId(requestID.ToString("D11")); 
-                OnRequestSpawned?.Invoke(duration, pickup, dropoff);
-                currentActiveQuests += 1;
-            }
+            var (duration, pickup, dropoff) = RequestIDParser.ParseCoreID(coreId);
+            OnRequestSpawned?.Invoke(duration, pickup, dropoff);
+            currentActiveQuests += 1;
         }
+        
     }
 
     public void RequestActive(int pickup, int dropOff)
     {
-        if (hasActiveQuest) return;
-
-        pickupID = pickup;
-        dropOffID = dropOff;
-        hasActiveQuest = true;
-
-        OnSpawnPointToggle?.Invoke(pickupID); 
+        if (!_flow.TryActivate(pickup, dropOff))
+            return;
+        OnSpawnPointToggle?.Invoke(pickup);
     }
 
 
     private void OnCabinStateUpdated(CabinStateMachine.CabinStates state)
     {
-        currentState = state;
+        var result = _flow.HandleCabinState(state);
 
-        if (!hasActiveQuest) return;
+        if (result.ToggleSpawnPoint)
+            OnSpawnPointToggle?.Invoke(result.ToggleId);
 
-        if (currentState == CabinStateMachine.CabinStates.Idling)
-        {
-            OnSpawnPointToggle?.Invoke(pickupID);
-        }
-        else if (currentState == CabinStateMachine.CabinStates.Picked)
-        {
-            OnSpawnPointToggle?.Invoke(dropOffID);
-        }
-        else if (currentState == CabinStateMachine.CabinStates.Dropped)
-        {
-            hasActiveQuest = false;
+        if (result.QuestCompleted)
             OnRequestDone?.Invoke();
-        }
     }
 
     #endregion
-    
-
     
     
     private void TimeSegsChanged(int currentTimeSeg)
@@ -180,27 +155,4 @@ public class SpawnPaceManager : MonoBehaviour
     }
     
     
-
-    private (int dur, int pick, int drop) ParsingId(string travelIDRaw)
-    {
-        ReadOnlySpan<char> travelIDChar = travelIDRaw.AsSpan();
-        return
-        (
-            int.Parse(travelIDChar.Slice(0, 3)),  // duration
-            int.Parse(travelIDChar.Slice(3, 3)),  // pickup
-            int.Parse(travelIDChar.Slice(6, 3))   // dropoff
-        );
-    }
-    
-    
-    //This part is to parse the data from the str
-    private void TimeSegParser(string travelIDRaw)
-    {
-        ReadOnlySpan<char> travelIDChar = travelIDRaw.AsSpan();
-        int timeSegment = int.Parse(travelIDChar.Slice(11, 2));
-        int requestID   = int.Parse(travelIDChar.Slice(0, 11)); 
-    
-        if (requestDict.ContainsKey(timeSegment))
-            requestDict[timeSegment].Add(requestID);
-    }
 }
