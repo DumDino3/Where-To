@@ -26,7 +26,7 @@ public class LiveQuestInstance : MonoBehaviour
     public void Initialize(int durationID, int pickupID, int dropOffID)
     {
         currentTime = 0;
-        duration = (durationID > 0) ? durationID * 60 : 300;
+        duration = (durationID > 0) ? durationID : 300;
         this.pickupID = pickupID;
         this.dropOffID = dropOffID;
 
@@ -45,7 +45,7 @@ public class LiveQuestInstance : MonoBehaviour
             return;
         }
 
-        UpdateCountdown(remaining);
+        StartCountdown(remaining);
     }
 
     private void UpdateUI()
@@ -57,7 +57,7 @@ public class LiveQuestInstance : MonoBehaviour
             dropOffText.text = $"Drop Off: {dropOffID}";
     }
 
-    private void UpdateCountdown(float remaining)
+    private void StartCountdown(float remaining)
     {
         if (countdownText == null) return;
 

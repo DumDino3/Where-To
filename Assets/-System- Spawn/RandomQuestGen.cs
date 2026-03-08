@@ -34,6 +34,7 @@ public class RandomRequestGen : MonoBehaviour
             timeSeg = UnityEngine.Random.Range(0, 3);
         
             string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}{timeSeg:D2}";
+            Debug.Log(questID);
             onQuestGenerated?.Invoke(questID);
         }
     }
