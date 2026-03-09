@@ -68,8 +68,9 @@ public class LiveQuestInstance : MonoBehaviour
 
     public void AcceptQuest()
     {
+        
         onQuestAccepted?.Invoke(pickupID, dropOffID);
-        Debug.Log("quest accepted");
+        liveQuestPool.FlushPool();
         liveQuestPool.ReturnToPool(this);
     }
 }

@@ -24,8 +24,7 @@ public class SpawnPointsDirector : MonoBehaviour
         SpawnPaceManager.OnSpawnPointToggle += ActivateSpawnPointByID;
         SpawnPaceManager.OnRequestDone -= DisableAllChildren;
         SpawnPaceManager.OnRequestDone += DisableAllChildren;
-
-        // Sync immediately on enable so new children are caught right away
+        
         AddSpawnPointInChildren();
         CleanAndFlush();
     }
@@ -34,7 +33,7 @@ public class SpawnPointsDirector : MonoBehaviour
     {
         SpawnPoint.onSpawnPointChanged -= CleanAndFlush;
         SpawnPaceManager.OnSpawnPointToggle -= ActivateSpawnPointByID;
-        SpawnPaceManager.OnRequestDone -= DisableAllChildren; // FIXED: was +=
+        SpawnPaceManager.OnRequestDone -= DisableAllChildren; 
     }
 
     private void Update()
@@ -42,8 +41,6 @@ public class SpawnPointsDirector : MonoBehaviour
         if (!Application.isPlaying)
         {
             DisableAllChildren();
-            // Removed AddSpawnPointInChildren() from Update — 
-            // was running every frame and fighting with CleanAndFlush
         }
     }
 

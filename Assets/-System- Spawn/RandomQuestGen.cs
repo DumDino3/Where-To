@@ -5,7 +5,7 @@ public class RandomRequestGen : MonoBehaviour
 {
     
     public static event Action<string> onQuestGenerated;
-    private int questLimits = 10;
+    private int questLimits = 5;
     private int durationID;
     private int pickupID;
     private int dropOffID;
@@ -21,7 +21,7 @@ public class RandomRequestGen : MonoBehaviour
     {
         for (int i = 0; i < questLimits; i++)
         {
-            durationID = UnityEngine.Random.Range(10, 20); 
+            durationID = UnityEngine.Random.Range(9, 10); 
             pickupID = UnityEngine.Random.Range(1, 5);
         
             do
@@ -31,10 +31,9 @@ public class RandomRequestGen : MonoBehaviour
             while (dropOffID == pickupID);
         
             priorityID = 0;
-            timeSeg = UnityEngine.Random.Range(0, 3);
+            timeSeg = 1;
         
             string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}{timeSeg:D2}";
-            Debug.Log(questID);
             onQuestGenerated?.Invoke(questID);
         }
     }

@@ -13,31 +13,18 @@ public class SpawnPaceManager : MonoBehaviour
     
     private readonly RequestFlowController _flow = new RequestFlowController();
     private readonly RequestScheduler _schedule = new RequestScheduler();
+    private readonly SegmentQueue _perSegmentsQueue = new SegmentQueue();
     
-    [Header("Runtime Data")] 
-    public int CurrentID;
     
-    [Header("Current Time")] public int currentTime;
-    
-    [Header("Quest Manager")]
+    [Header("Request Manager")]
     public int currentActiveQuests = 0;
-
+    public int perPriorityActiveLimit = 1; //this is the active limit for each priority level, it will be used to control the spawn of quests based on their priority.
     private bool hasActiveQuest = false;
     
     
-    private CabinStateMachine.CabinStates previousState;
+    // private CabinStateMachine.CabinStates previousState;
     
-    
-    [Header("Parsed Data")]
-    [SerializeField] private int durationID;
-    [SerializeField] private int pickupID;
-    [SerializeField] private int dropOffID;
-    [SerializeField] private int priorityID;
-    [SerializeField] private int timeSegID;
-    
-    private int questLimits = 30; 
-    
-    [SerializeField] private CabinStateMachine.CabinStates currentState;
+    // [SerializeField] private CabinStateMachine.CabinStates currentState;
 
 
     // ======= Events ========================================================================================================
@@ -47,11 +34,8 @@ public class SpawnPaceManager : MonoBehaviour
     public static event  Action<int,int,int> OnRequestSpawned;
     public static event Action OnRequestDone;
     
-   
     
-    
-    
-    // ======= Events ========================================================================================================
+    // ======= Subscribing to ========================================================================================================
 
 
 
@@ -64,8 +48,11 @@ public class SpawnPaceManager : MonoBehaviour
         
         //Quest Flagger
         LiveQuestInstance.onQuestAccepted += RequestActive;
+        LiveQuestInstance.onQuestExpired += RequestExpired;
         //cabin state
         CabinStateMachine.OnCabinStateChanged += OnCabinStateUpdated;
+
+        
 
     }
     
@@ -77,8 +64,11 @@ public class SpawnPaceManager : MonoBehaviour
         
         //Quest Flagger
         LiveQuestInstance.onQuestAccepted -= RequestActive;
+        LiveQuestInstance.onQuestExpired += RequestExpired;
         //cabin state
         CabinStateMachine.OnCabinStateChanged -= OnCabinStateUpdated;
+        
+        
     }
     
 
@@ -88,9 +78,12 @@ public class SpawnPaceManager : MonoBehaviour
 
     private void Start()
     {
-        
+        SetRule();
     }
- 
+
+    private void SetRule()
+    {
+    }
 
 
     
@@ -103,7 +96,7 @@ public class SpawnPaceManager : MonoBehaviour
 
     public void InitilizeTimeSegmentDict(int timeSeg)
     {
-        _schedule.EnsureSegment(timeSeg);
+        _schedule.EstablishSegments(timeSeg);
     }
     
     
@@ -117,13 +110,45 @@ public class SpawnPaceManager : MonoBehaviour
 
     public void PushDataIntoLive(int currentTimeSeg)
     {
-        foreach (int coreId in _schedule.GetSortedCoreIDForSegment(currentTimeSeg))
-        {
-            var (duration, pickup, dropoff) = RequestIDParser.ParseCoreID(coreId);
-            OnRequestSpawned?.Invoke(duration, pickup, dropoff);
-            currentActiveQuests += 1;
+        var sortedIds = _schedule.GetSortedCoreIDForSegment(currentTimeSeg).ToList();
+    
+        //this to ensure that when a segmenet is empty it will not trigger the pull live request function and cause error
+        if (sortedIds.Count == 0) {
+            return;
         }
-        
+
+        foreach (int coreId in sortedIds)
+        {
+            _perSegmentsQueue.PushCoreIDintoQueue(coreId);
+        }
+        PullLiveRequestFromQueue();
+    }
+    public void PullLiveRequestFromQueue()
+    {
+        if (currentActiveQuests <= perPriorityActiveLimit && hasActiveQuest == false)
+        {
+            for (int i = 0; i < perPriorityActiveLimit - currentActiveQuests; i++)
+            {
+                int coreId = _perSegmentsQueue.PopCoreIDFromQueue();
+                if (coreId == 0) return; // this means the queue is empty, so we should stop trying to pull from it.
+                var (duration, pickup, dropoff) = RequestIDParser.ParseCoreID(coreId);
+                OnRequestSpawned?.Invoke(duration, pickup, dropoff);
+                currentActiveQuests += 1;
+            }
+        }
+        return;
+    }
+    
+    public void RequestExpired()
+    {
+        currentActiveQuests -= 1;
+        PullLiveRequestFromQueue();
+    }
+    
+    public void RequestCompleted()
+    {
+        currentActiveQuests = 0;
+        PullLiveRequestFromQueue();
     }
 
     public void RequestActive(int pickup, int dropOff)
@@ -131,6 +156,7 @@ public class SpawnPaceManager : MonoBehaviour
         if (!_flow.TryActivate(pickup, dropOff))
             return;
         OnSpawnPointToggle?.Invoke(pickup);
+        hasActiveQuest = true;
     }
 
 
@@ -143,6 +169,8 @@ public class SpawnPaceManager : MonoBehaviour
 
         if (result.QuestCompleted)
             OnRequestDone?.Invoke();
+            RequestCompleted();
+            hasActiveQuest = false;
     }
 
     #endregion
@@ -150,7 +178,6 @@ public class SpawnPaceManager : MonoBehaviour
     
     private void TimeSegsChanged(int currentTimeSeg)
     {
-        currentTime = currentTimeSeg;
         PushDataIntoLive(currentTimeSeg);
     }
     

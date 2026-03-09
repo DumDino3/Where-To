@@ -51,6 +51,7 @@ public sealed class RequestFlowController
         public static readonly FlowResult None = new FlowResult(false, 0, false);
         public static readonly FlowResult Done = new FlowResult(false, 0, true);
 
+        //This is the gang rule to call this follow the °❀⋆.ೃ࿔*:･°❀⋆.ೃ࿔*:･Gang rule°❀⋆.ೃ࿔*:･°❀⋆.ೃ࿔*:･
         public readonly bool ToggleSpawnPoint;
         public readonly int ToggleId;
         public readonly bool QuestCompleted;
@@ -61,6 +62,7 @@ public sealed class RequestFlowController
             ToggleId = toggleId;
             QuestCompleted = questCompleted;
         }
+        //Rule ^^^^^^
 
         public static FlowResult Toggle(int id) => new FlowResult(true, id, false);
     }

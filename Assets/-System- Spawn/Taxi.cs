@@ -22,7 +22,6 @@ public class Taxi : MonoBehaviour
         {
             if (!isPickingUp)
             {
-                Debug.Log("pickingUp");
                 cabinStateMachine.SetPickUp();
             }
             else
@@ -37,7 +36,6 @@ public class Taxi : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("SpawnPoint"))
         {
-            Debug.Log("Press E to interact");
             isInSpawnPoint = true;
         }
     }
