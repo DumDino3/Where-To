@@ -21,14 +21,10 @@ public class SpawnPaceManager : MonoBehaviour
     public int perPriorityActiveLimit = 1; //this is the active limit for each priority level, it will be used to control the spawn of quests based on their priority.
     private bool hasActiveQuest = false;
     
-    
-    // private CabinStateMachine.CabinStates previousState;
-    
-    // [SerializeField] private CabinStateMachine.CabinStates currentState;
 
 
     // ======= Events ========================================================================================================
-
+    
     public static event Action<int> OnSpawnPointToggle; //this command the director
     public static event Action OnCabinStateChanged;
     public static event  Action<int,int,int> OnRequestSpawned;
@@ -51,8 +47,11 @@ public class SpawnPaceManager : MonoBehaviour
         LiveQuestInstance.onQuestExpired += RequestExpired;
         //cabin state
         CabinStateMachine.OnCabinStateChanged += OnCabinStateUpdated;
-
         
+
+        //subscribe to override mediator
+        SpawnPointOverrideMediator.OnSpawnPointOverride += OverrideCurrentPoints;
+
 
     }
     
@@ -64,10 +63,12 @@ public class SpawnPaceManager : MonoBehaviour
         
         //Quest Flagger
         LiveQuestInstance.onQuestAccepted -= RequestActive;
-        LiveQuestInstance.onQuestExpired += RequestExpired;
+        LiveQuestInstance.onQuestExpired -= RequestExpired;
         //cabin state
         CabinStateMachine.OnCabinStateChanged -= OnCabinStateUpdated;
         
+        //unsubscribe to override mediator
+        SpawnPointOverrideMediator.OnSpawnPointOverride -= OverrideCurrentPoints;
         
     }
     
@@ -89,9 +90,9 @@ public class SpawnPaceManager : MonoBehaviour
     
     #region Progression System
 
-    public void OverrideCurrentPoints()
+    public void OverrideCurrentPoints(int spawnPointID)
     {
-        //this will override the current active point but what about disable it ?
+        OnSpawnPointToggle?.Invoke(spawnPointID);
     }
 
     public void InitilizeTimeSegmentDict(int timeSeg)
@@ -127,6 +128,9 @@ public class SpawnPaceManager : MonoBehaviour
     {
         if (currentActiveQuests <= perPriorityActiveLimit && hasActiveQuest == false)
         {
+            //to-do: hey the ochestor shouldn't be responsible for this, fix later.
+            
+            
             for (int i = 0; i < perPriorityActiveLimit - currentActiveQuests; i++)
             {
                 int coreId = _perSegmentsQueue.PopCoreIDFromQueue();

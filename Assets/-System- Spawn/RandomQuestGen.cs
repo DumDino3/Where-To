@@ -31,7 +31,7 @@ public class RandomRequestGen : MonoBehaviour
             while (dropOffID == pickupID);
         
             priorityID = 0;
-            timeSeg = 1;
+            timeSeg = 0;
         
             string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}{timeSeg:D2}";
             onQuestGenerated?.Invoke(questID);
