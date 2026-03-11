@@ -4,26 +4,19 @@ using UnityEditor;
 
 public class DatabaseImporter
 {
-    //CSV file paths (inside Resources folder)
     private const string LOCATION_CSV = "CsvDatabase/LOCATION_ID";
-    private const string DIALOGUE_POOL_CSV = "CsvDatabase/DIAG_TITLE_POOL";
-    private const string TAGS_CSV = "CsvDatabase/TAGS";
-
-    //SO asset output paths
     private const string LOCATION_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/LocationDatabaseSO.asset";
-    private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/DialoguePoolDatabaseSO.asset";
-    private const string TAGS_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/TagDatabaseSO.asset";
 
     #region Import All
 
-    [MenuItem("Tools/Import/All")]
+    [MenuItem("Tools/ImportCsvToDatabase/All")]
     public static void ImportAll()
     {
         ImportLocations();
         ImportNPCs();
         ImportDialoguePools();
         ImportTags();
-        Debug.Log("DatabaseImporter: All imports complete.");
+        Debug.Log("DatabaseImporter: Worked well :)");
     }
     #endregion
 
@@ -155,6 +148,8 @@ public class DatabaseImporter
     #endregion
 
     #region Dialogue Pools
+    private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/DialoguePoolDatabaseSO.asset";
+    private const string DIALOGUE_POOL_CSV = "CsvDatabase/DIAG_TITLE_POOL";
 
     [MenuItem("Tools/Import/Dialogue Pools")]
     public static void ImportDialoguePools()
@@ -178,6 +173,8 @@ public class DatabaseImporter
 
         //Split CSV file into lines
         string[] lines = csv.text.Split('\n');
+        int poolCounter = 1;
+
         for (int i = 0; i < lines.Length; i++)
         {
             //Trim blank spaces at start and end. Check if there is data left.
@@ -186,29 +183,34 @@ public class DatabaseImporter
 
             //Further split each line into fields
             string[] fields = line.Split(',');
-            if (fields.Length < 4) continue;
+            if (fields.Length < 5) continue;
 
-            //Extract pool ID from the first field's prefix (e.g. "001.transition" → "001")
-            string firstField = fields[0].Trim();
-            string poolId = firstField.Split('.')[0];
-            if (string.IsNullOrEmpty(poolId))
+            //Column A is pool name, B-E are yarn node titles
+            string poolName = fields[0].Trim();
+            if (string.IsNullOrEmpty(poolName))
             {
-                Debug.LogWarning($"DialoguePoolImporter: Can't parse ID from '{firstField}' on row {i}");
+                Debug.LogWarning($"DialoguePoolImporter: No pool name found on row {i}");
                 continue;
             }
 
+            //Auto-assign pool ID as zero-padded string
+            string poolId = poolCounter.ToString("D3");
+
             //During is a list, currently one entry per CSV row. Creator tool will allow multiple later.
             List<string> duringList = new List<string>();
-            duringList.Add(fields[2].Trim());
+            duringList.Add(fields[3].Trim());
 
             databaseSO.entries.Add(new DialoguePoolEntry
             {
                 poolId = poolId,
-                transition = fields[0].Trim(),
-                getOn = fields[1].Trim(),
+                poolName = poolName,
+                transition = fields[1].Trim(),
+                getOn = fields[2].Trim(),
                 during = duringList,
-                end = fields[3].Trim()
+                end = fields[4].Trim()
             });
+
+            poolCounter++;
         }
 
         //Set edited SO assets as dirty (edited), trigger save assets so unity writes dirty files
@@ -219,6 +221,8 @@ public class DatabaseImporter
     #endregion
 
     #region Tags
+    private const string TAGS_CSV = "CsvDatabase/TAGS";
+    private const string TAGS_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/TagDatabaseSO.asset";
 
     [MenuItem("Tools/Import/Tags")]
     public static void ImportTags()

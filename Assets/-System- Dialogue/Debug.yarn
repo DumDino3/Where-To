@@ -1,31 +1,31 @@
 ﻿title: Debug
 ---
-This is an example of a Yarn Spinner script. Write your dialogue here!
-This is the second
-this is something
--> Jump test 2
+This is an example of a Yarn Spinner script. Write your dialogue here! #line:0a34972 
+This is the second #line:04a82e1 
+this is something #line:0d6fd98 
+-> Jump test 2 #line:042f948 
     <<jump test2>>
--> Jump test 3
+-> Jump test 3 #line:0c9c874 
     <<jump test3>>
--> Jump test 4
+-> Jump test 4 #line:0c6ed07 
     <<jump test4>>
 
 ===
 
 title: test2
 ---
-This is the second node in the Yarn Spinner script.
+This is the second node in the Yarn Spinner script. #line:0856d03 
 
 ===
 
 title: test3
 ---
-This is the third node in the Yarn Spinner script.
+This is the third node in the Yarn Spinner script. #line:0558522 
 
 ===
 
 title: test4
 ---
-This is the fourth node in the Yarn Spinner script.
+This is the fourth node in the Yarn Spinner script. #line:0954e16 
 
 ===

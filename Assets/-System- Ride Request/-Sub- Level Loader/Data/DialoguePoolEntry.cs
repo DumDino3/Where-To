@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public struct DialoguePoolEntry
 {
     public string poolId;
+    public string poolName;
     public string transition;
     public string getOn;
     public List<string> during;
