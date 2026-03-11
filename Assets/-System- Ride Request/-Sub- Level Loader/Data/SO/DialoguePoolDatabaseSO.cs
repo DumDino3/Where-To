@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DialoguePoolDatabaseSO", menuName = "Data/Dialogue Pool Database")]
+[CreateAssetMenu(fileName = "DialoguePoolDatabaseSO", menuName = "Database/Dialogue Pool Database")]
 public class DialoguePoolDatabaseSO : ScriptableObject
 {
     public List<DialoguePoolEntry> entries = new List<DialoguePoolEntry>();

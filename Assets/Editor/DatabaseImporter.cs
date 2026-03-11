@@ -4,9 +4,6 @@ using UnityEditor;
 
 public class DatabaseImporter
 {
-    private const string LOCATION_CSV = "CsvDatabase/LOCATION_ID";
-    private const string LOCATION_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/LocationDatabaseSO.asset";
-
     #region Import All
 
     [MenuItem("Tools/ImportCsvToDatabase/All")]
@@ -14,15 +11,17 @@ public class DatabaseImporter
     {
         ImportLocations();
         ImportNPCs();
-        ImportDialoguePools();
+        //ImportDialoguePools();
         ImportTags();
         Debug.Log("DatabaseImporter: Worked well :)");
     }
     #endregion
 
     #region Locations
+    private const string LOCATION_CSV = "CsvDatabase/LOCATION_ID";
+    private const string LOCATION_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/LocationDatabaseSO.asset";
 
-    [MenuItem("Tools/Import/Locations")]
+    [MenuItem("Tools/ImportCsvToDatabase/Locations")]
     public static void ImportLocations()
     {
         //Load CSV file into script
@@ -78,9 +77,9 @@ public class DatabaseImporter
 
     #region NPCs
     private const string NPC_CSV = "CsvDatabase/NPC_ID";
-    private const string NPC_FOLDER = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/NPC";
+    private const string NPC_FOLDER = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/NPC";
 
-    [MenuItem("Tools/Import/NPCs")]
+    [MenuItem("Tools/ImportCsvToDatabase/NPCs")]
     public static void ImportNPCs()
     {
         //Load CSV file into script
@@ -148,83 +147,83 @@ public class DatabaseImporter
     #endregion
 
     #region Dialogue Pools
-    private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/DialoguePoolDatabaseSO.asset";
-    private const string DIALOGUE_POOL_CSV = "CsvDatabase/DIAG_TITLE_POOL";
+    // private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/DialoguePoolDatabaseSO.asset";
+    // private const string DIALOGUE_POOL_CSV = "CsvDatabase/DIAG_TITLE_POOL";
 
-    [MenuItem("Tools/Import/Dialogue Pools")]
-    public static void ImportDialoguePools()
-    {
-        //Load CSV file into script
-        TextAsset csv = Resources.Load<TextAsset>(DIALOGUE_POOL_CSV);
-        if (csv == null)
-        {
-            Debug.LogError("CSV not found at Resources/" + DIALOGUE_POOL_CSV);
-            return;
-        }
+    // [MenuItem("Tools/ImportCsvToDatabase/Dialogue Pools")]
+    // public static void ImportDialoguePools()
+    // {
+    //     //Load CSV file into script
+    //     TextAsset csv = Resources.Load<TextAsset>(DIALOGUE_POOL_CSV);
+    //     if (csv == null)
+    //     {
+    //         Debug.LogError("CSV not found at Resources/" + DIALOGUE_POOL_CSV);
+    //         return;
+    //     }
 
-        //Check for SO asset, if none create a new one. Regardless of SO asset presence, clear the list before write.
-        DialoguePoolDatabaseSO databaseSO = AssetDatabase.LoadAssetAtPath<DialoguePoolDatabaseSO>(DIALOGUE_POOL_ASSET);
-        if (databaseSO == null)
-        {
-            databaseSO = ScriptableObject.CreateInstance<DialoguePoolDatabaseSO>();
-            AssetDatabase.CreateAsset(databaseSO, DIALOGUE_POOL_ASSET);
-        }
-        databaseSO.entries.Clear();
+    //     //Check for SO asset, if none create a new one. Regardless of SO asset presence, clear the list before write.
+    //     DialoguePoolDatabaseSO databaseSO = AssetDatabase.LoadAssetAtPath<DialoguePoolDatabaseSO>(DIALOGUE_POOL_ASSET);
+    //     if (databaseSO == null)
+    //     {
+    //         databaseSO = ScriptableObject.CreateInstance<DialoguePoolDatabaseSO>();
+    //         AssetDatabase.CreateAsset(databaseSO, DIALOGUE_POOL_ASSET);
+    //     }
+    //     databaseSO.entries.Clear();
 
-        //Split CSV file into lines
-        string[] lines = csv.text.Split('\n');
-        int poolCounter = 1;
+    //     //Split CSV file into lines
+    //     string[] lines = csv.text.Split('\n');
+    //     int poolCounter = 1;
 
-        for (int i = 0; i < lines.Length; i++)
-        {
-            //Trim blank spaces at start and end. Check if there is data left.
-            string line = lines[i].Trim().TrimEnd(',');
-            if (string.IsNullOrEmpty(line)) continue;
+    //     for (int i = 0; i < lines.Length; i++)
+    //     {
+    //         //Trim blank spaces at start and end. Check if there is data left.
+    //         string line = lines[i].Trim().TrimEnd(',');
+    //         if (string.IsNullOrEmpty(line)) continue;
 
-            //Further split each line into fields
-            string[] fields = line.Split(',');
-            if (fields.Length < 5) continue;
+    //         //Further split each line into fields
+    //         string[] fields = line.Split(',');
+    //         if (fields.Length < 5) continue;
 
-            //Column A is pool name, B-E are yarn node titles
-            string poolName = fields[0].Trim();
-            if (string.IsNullOrEmpty(poolName))
-            {
-                Debug.LogWarning($"DialoguePoolImporter: No pool name found on row {i}");
-                continue;
-            }
+    //         //Column A is pool name, B-E are yarn node titles
+    //         string poolName = fields[0].Trim();
+    //         if (string.IsNullOrEmpty(poolName))
+    //         {
+    //             Debug.LogWarning($"DialoguePoolImporter: No pool name found on row {i}");
+    //             continue;
+    //         }
 
-            //Auto-assign pool ID as zero-padded string
-            string poolId = poolCounter.ToString("D3");
+    //         //Auto-assign pool ID as zero-padded string
+    //         string poolId = poolCounter.ToString("D3");
 
-            //During is a list, currently one entry per CSV row. Creator tool will allow multiple later.
-            List<string> duringList = new List<string>();
-            duringList.Add(fields[3].Trim());
+    //         //During is a list, currently one entry per CSV row. Creator tool will allow multiple later.
+    //         List<string> duringList = new List<string>();
+    //         duringList.Add(fields[3].Trim());
 
-            databaseSO.entries.Add(new DialoguePoolEntry
-            {
-                poolId = poolId,
-                poolName = poolName,
-                transition = fields[1].Trim(),
-                getOn = fields[2].Trim(),
-                during = duringList,
-                end = fields[4].Trim()
-            });
+    //         databaseSO.entries.Add(new DialoguePoolEntry
+    //         {
+    //             poolId = poolId,
+    //             poolName = poolName,
+    //             transition = fields[1].Trim(),
+    //             getOn = fields[2].Trim(),
+    //             during = duringList,
+    //             end = fields[4].Trim()
+    //         });
 
-            poolCounter++;
-        }
+    //         poolCounter++;
+    //     }
 
-        //Set edited SO assets as dirty (edited), trigger save assets so unity writes dirty files
-        EditorUtility.SetDirty(databaseSO);
-        AssetDatabase.SaveAssets();
-        Debug.Log($"DialoguePoolImporter: Imported {databaseSO.entries.Count} pools.");
-    }
+    //     //Set edited SO assets as dirty (edited), trigger save assets so unity writes dirty files
+    //     EditorUtility.SetDirty(databaseSO);
+    //     AssetDatabase.SaveAssets();
+    //     Debug.Log($"DialoguePoolImporter: Imported {databaseSO.entries.Count} pools.");
+    // }
     #endregion
 
     #region Tags
     private const string TAGS_CSV = "CsvDatabase/TAGS";
-    private const string TAGS_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/TagDatabaseSO.asset";
+    private const string TAGS_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/TagDatabaseSO.asset";
 
-    [MenuItem("Tools/Import/Tags")]
+    [MenuItem("Tools/ImportCsvToDatabase/Tags")]
     public static void ImportTags()
     {
         //Load CSV file into script

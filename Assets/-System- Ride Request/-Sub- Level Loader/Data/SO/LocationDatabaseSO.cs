@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LocationDatabaseSO", menuName = "Data/Location Database")]
+[CreateAssetMenu(fileName = "LocationDatabaseSO", menuName = "Database/Location Database")]
 public class LocationDatabaseSO : ScriptableObject
 {
     public List<LocationEntry> entries = new List<LocationEntry>();

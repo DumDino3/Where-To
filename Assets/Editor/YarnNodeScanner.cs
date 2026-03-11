@@ -14,12 +14,12 @@ public static class YarnNodeScanner
         if (string.IsNullOrEmpty(folderPath))
             folderPath = DEFAULT_YARN_FOLDER;
 
-        HashSet<string> titleList = new HashSet<string>();
+        HashSet<string> nodeSet = new HashSet<string>();
 
         if (!Directory.Exists(folderPath))
         {
             Debug.LogWarning($"YarnNodeScanner: Folder not found at '{folderPath}'");
-            return titleList;
+            return nodeSet;
         }
 
         //Find all .yarn files recursively
@@ -34,26 +34,25 @@ public static class YarnNodeScanner
             {
                 string trimmed = line.Trim();
 
-                //The lion only concerns himself with lines starting with "title:"
+                //Yarn node headers use "title: nodeName"
                 if (!trimmed.StartsWith("title:")) continue;
 
-                //Trim the first 6 letter, which is "title:".
-                //Trim blank spaces one more time and take the rest as actual title
+                //Extract the title value after "title:"
                 string nodeTitle = trimmed.Substring(6).Trim();
                 if (string.IsNullOrEmpty(nodeTitle)) continue;
 
                 //Check for duplicate before adding
-                if (!titleList.Add(nodeTitle))
-                    Debug.LogError($"YarnNodeScanner: Duplicate '{nodeTitle}' found in '{filePath}'");
+                if (!nodeSet.Add(nodeTitle))
+                    Debug.LogError($"YarnNodeScanner: Duplicate node title '{nodeTitle}' found in '{filePath}'");
             }
         }
 
-        return titleList;
+        return nodeSet;
     }
 
     //Quick check if a title exists
-    public static bool NodeExists(string nodeTitle, HashSet<string> titleList)
+    public static bool NodeExists(string nodeTitle, HashSet<string> nodeSet)
     {
-        return titleList.Contains(nodeTitle);
+        return nodeSet.Contains(nodeTitle);
     }
 }
