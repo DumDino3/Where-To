@@ -1,123 +1,189 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnPaceManager : MonoBehaviour
 {
     //hmm if any id being set to 00 or null te system must register random 
     
-    public class dataPackage
-    {
-        private int timeSeg;
-        private int duration;
-        private int pickUpId;
-        private int dropOffId;
-    }
 
-    [Header("Current Time")] public int currentTime;
+    // ======= Variables ========================================================================================================
+
     
-    [SerializeField]
-    int travelIDRaw;
-
-    public int chunkSize = 4;
-    [SerializeField] private int duration;
-    [SerializeField] private int priority;
-    [SerializeField] private int currentID;
-    [SerializeField] private int pickUpID;
-    [SerializeField] private int dropOffID;
+    private readonly RequestFlowController _flow = new RequestFlowController();
+    private readonly RequestScheduler _schedule = new RequestScheduler();
+    private readonly SegmentQueue _perSegmentsQueue = new SegmentQueue();
     
-    [SerializeField] private CurrentTaxiState currentState;
-
-    public static event Action<int> OnSpawnPointChanged; //this command the director
     
-    public static event Action<int> OnChunkChanged;
+    [Header("Request Manager")]
+    public int currentActiveQuests = 0;
+    public int perPriorityActiveLimit = 1; //this is the active limit for each priority level, it will be used to control the spawn of quests based on their priority.
+    private bool hasActiveQuest = false;
+    
 
+
+    // ======= Events ========================================================================================================
+    
+    public static event Action<int> OnSpawnPointToggle; //this command the director
+    public static event Action OnCabinStateChanged;
+    public static event  Action<int,int,int> OnRequestSpawned;
+    public static event Action OnRequestDone;
+    
+    
+    // ======= Subscribing to ========================================================================================================
+
+
+
+    #region Events Initialization
     private void OnEnable()
     {
-        DayCycleManager.onDayStarted += BeginDay;
         DayCycleManager.onTimeSegsChanged += TimeSegsChanged;
+        RandomRequestGen.onQuestGenerated += PushDataIntoQueue;
+        DayCycleManager.initializeTimeSeg += InitilizeTimeSegmentDict;
+        
+        //Quest Flagger
+        LiveQuestInstance.onQuestAccepted += RequestActive;
+        LiveQuestInstance.onQuestExpired += RequestExpired;
+        //cabin state
+        CabinStateMachine.OnCabinStateChanged += OnCabinStateUpdated;
+        
+
+        //subscribe to override mediator
+        SpawnPointOverrideMediator.OnSpawnPointOverride += OverrideCurrentPoints;
+
+
     }
     
     private void OnDisable()
     {
-        DayCycleManager.onDayStarted -= BeginDay;
         DayCycleManager.onTimeSegsChanged -= TimeSegsChanged;
+        RandomRequestGen.onQuestGenerated -= PushDataIntoQueue;
+        DayCycleManager.initializeTimeSeg -= InitilizeTimeSegmentDict;
+        
+        //Quest Flagger
+        LiveQuestInstance.onQuestAccepted -= RequestActive;
+        LiveQuestInstance.onQuestExpired -= RequestExpired;
+        //cabin state
+        CabinStateMachine.OnCabinStateChanged -= OnCabinStateUpdated;
+        
+        //unsubscribe to override mediator
+        SpawnPointOverrideMediator.OnSpawnPointOverride -= OverrideCurrentPoints;
+        
     }
+    
+
+    #endregion
+  
 
 
     private void Start()
     {
-        InitializingQuest();
+        SetRule();
+    }
+
+    private void SetRule()
+    {
     }
 
 
-    public void OverrideCurrentPoints()
+    
+    #region Progression System
+
+    public void OverrideCurrentPoints(int spawnPointID)
     {
-        //this will override the current active point but what about disable it ?
+        OnSpawnPointToggle?.Invoke(spawnPointID);
     }
 
-    public void PushDataIntoQueue(int currentTimeSeg)
+    public void InitilizeTimeSegmentDict(int timeSeg)
     {
-        //This will be the worker who will fget the data from the quest for each time segment
-        //and also check if the data require specific segment it would push that into queue instead of random from pool
-        //but will this performance taxing ?
-        
-        //but this script should only push but will not display them all at once right ?
-        //Like it should put all of them into that interval queue all call it one by one
-        //we can use some priority system to always push a quest higher to display sooner than any quests
-        
-        // note:it should wait till the state of the taxi reach idle state to push the quest (for now)
+        _schedule.EstablishSegments(timeSeg);
     }
-
-    private void InitializingQuest()
+    
+    
+    public void PushDataIntoQueue(string requestID)
     {
-        //This will intialize the pool of that day quest
+        _schedule.TryAddRawQuestId(requestID);
     }
     
 
-    private void BeginDay()
+    
+
+    public void PushDataIntoLive(int currentTimeSeg)
     {
-        
+        var sortedIds = _schedule.GetSortedCoreIDForSegment(currentTimeSeg).ToList();
+    
+        //this to ensure that when a segmenet is empty it will not trigger the pull live request function and cause error
+        if (sortedIds.Count == 0) {
+            return;
+        }
+
+        foreach (int coreId in sortedIds)
+        {
+            _perSegmentsQueue.PushCoreIDintoQueue(coreId);
+        }
+        PullLiveRequestFromQueue();
+    }
+    public void PullLiveRequestFromQueue()
+    {
+        if (currentActiveQuests <= perPriorityActiveLimit && hasActiveQuest == false)
+        {
+            //to-do: hey the ochestor shouldn't be responsible for this, fix later.
+            
+            
+            for (int i = 0; i < perPriorityActiveLimit - currentActiveQuests; i++)
+            {
+                int coreId = _perSegmentsQueue.PopCoreIDFromQueue();
+                if (coreId == 0) return; // this means the queue is empty, so we should stop trying to pull from it.
+                var (duration, pickup, dropoff) = RequestIDParser.ParseCoreID(coreId);
+                OnRequestSpawned?.Invoke(duration, pickup, dropoff);
+                currentActiveQuests += 1;
+            }
+        }
+        return;
+    }
+    
+    public void RequestExpired()
+    {
+        currentActiveQuests -= 1;
+        PullLiveRequestFromQueue();
+    }
+    
+    public void RequestCompleted()
+    {
+        currentActiveQuests = 0;
+        PullLiveRequestFromQueue();
     }
 
+    public void RequestActive(int pickup, int dropOff)
+    {
+        if (!_flow.TryActivate(pickup, dropOff))
+            return;
+        OnSpawnPointToggle?.Invoke(pickup);
+        hasActiveQuest = true;
+    }
+
+
+    private void OnCabinStateUpdated(CabinStateMachine.CabinStates state)
+    {
+        var result = _flow.HandleCabinState(state);
+
+        if (result.ToggleSpawnPoint)
+            OnSpawnPointToggle?.Invoke(result.ToggleId);
+
+        if (result.QuestCompleted)
+            OnRequestDone?.Invoke();
+            RequestCompleted();
+            hasActiveQuest = false;
+    }
+
+    #endregion
+    
+    
     private void TimeSegsChanged(int currentTimeSeg)
     {
-        currentTime = currentTimeSeg;
+        PushDataIntoLive(currentTimeSeg);
     }
     
-
-    enum CurrentTaxiState
-    {
-        PickUp,
-        DropOff,
-    }
-
-
-
-    [ContextMenu("Parse Travel ID")]
-    private void ParsingId()
-    {
-        duration = travelIDRaw / 1000;
-        pickUpID = travelIDRaw / 1000000;
-        dropOffID = travelIDRaw % 100000;
-        priority = dropOffID % 1000;
-
-    }
-
-    [ContextMenu("Test Spawn Event")]
-    private void TestSpawnEvent()
-    {
-        switch (currentState)
-        {
-            case CurrentTaxiState.PickUp:
-                OnSpawnPointChanged?.Invoke(pickUpID);
-                Debug.Log($"Invocated PickUp event with ID: {pickUpID}");
-                break;
-
-            case CurrentTaxiState.DropOff:
-                OnSpawnPointChanged?.Invoke(dropOffID);
-                Debug.Log($"Invocated DropOff event with ID: {dropOffID}");
-                break;
-        }
-    }
+    
 }
