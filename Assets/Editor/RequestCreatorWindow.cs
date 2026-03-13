@@ -4,38 +4,33 @@ using UnityEditor;
 
 public class RequestCreatorWindow : EditorWindow
 {
-    // ──────────────────────────────────────────────
-    // Database references
-    // ──────────────────────────────────────────────
+    #region Database references
     private RideRequestDatabaseSO requestDb;
     private ConditionDatabaseSO conditionDb;
     private DialoguePoolDatabaseSO dialoguePoolDb;
     private LocationDatabaseSO locationDb;
     private TagDatabaseSO tagDb;
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Request fields
-    // ──────────────────────────────────────────────
+    #region Request fields
     private string requestName = "";
     private int npcIndex = 0;
     private int spawnIndex = 0;
     private int destinationIndex = 0;
     private string duration = "005";
     private string priority = "01";
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Condition fields
-    // ──────────────────────────────────────────────
+    #region Condition fields
     private int includeTagAddIndex = 0;
     private int excludeTagAddIndex = 0;
     private bool createNewCondition = true;
     private int existingConditionIndex = 0;
     private List<string> includeTags = new List<string>();
     private List<string> excludeTags = new List<string>();
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Dialogue Pool fields
-    // ──────────────────────────────────────────────
+    #region Dialogue Pool fields
     private bool createNewPool = true;
     private int existingPoolIndex = 0;
     private string poolName = "";
@@ -43,22 +38,20 @@ public class RequestCreatorWindow : EditorWindow
     private string getOn = "";
     private List<string> during = new List<string>();
     private string end = "";
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Yarn validation
-    // ──────────────────────────────────────────────
+    #region Yarn validation
     private HashSet<string> knownYarnNodes = new HashSet<string>();
     private bool hasScannedYarn = false;
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // NPC cache
-    // ──────────────────────────────────────────────
+    #region NPC cache
     private NpcSO[] allNpcs;
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Scroll
-    // ──────────────────────────────────────────────
+    #region Scroll
     private Vector2 scrollPos;
+    #endregion
 
     [MenuItem("Tools/Request Creator")]
     public static void ShowWindow()
@@ -71,9 +64,7 @@ public class RequestCreatorWindow : EditorWindow
         RefreshNpcCache();
     }
 
-    // ──────────────────────────────────────────────
-    // Refresh NPC cache from project assets
-    // ──────────────────────────────────────────────
+    #region Refresh NPC cache from project assets
     private void RefreshNpcCache()
     {
         string[] guids = AssetDatabase.FindAssets("t:NpcSO");
@@ -84,6 +75,7 @@ public class RequestCreatorWindow : EditorWindow
             allNpcs[i] = AssetDatabase.LoadAssetAtPath<NpcSO>(path);
         }
     }
+    #endregion
 
     private void OnGUI()
     {
@@ -92,9 +84,7 @@ public class RequestCreatorWindow : EditorWindow
         EditorGUILayout.LabelField("REQUEST CREATOR", EditorStyles.boldLabel);
         EditorGUILayout.Space(10);
 
-        // ──────────────────────────────────────────────
-        // Database references
-        // ──────────────────────────────────────────────
+        #region Database references UI
         EditorGUILayout.LabelField("── DATABASES ──", EditorStyles.boldLabel);
         requestDb = (RideRequestDatabaseSO)EditorGUILayout.ObjectField("Request DB", requestDb, typeof(RideRequestDatabaseSO), false);
         conditionDb = (ConditionDatabaseSO)EditorGUILayout.ObjectField("Condition DB", conditionDb, typeof(ConditionDatabaseSO), false);
@@ -110,6 +100,7 @@ public class RequestCreatorWindow : EditorWindow
             EditorGUILayout.EndScrollView();
             return;
         }
+        #endregion
 
         DrawRequestSection();
         EditorGUILayout.Space(10);
@@ -118,22 +109,19 @@ public class RequestCreatorWindow : EditorWindow
         DrawDialoguePoolSection();
         EditorGUILayout.Space(20);
 
-        // ──────────────────────────────────────────────
-        // Create button
-        // ──────────────────────────────────────────────
+        #region Create button
         GUI.backgroundColor = Color.green;
         if (GUILayout.Button("CREATE", GUILayout.Height(30)))
         {
             CreateEntries();
         }
         GUI.backgroundColor = Color.white;
+        #endregion
 
         EditorGUILayout.EndScrollView();
     }
 
-    // ──────────────────────────────────────────────
-    // Request Section
-    // ──────────────────────────────────────────────
+    #region Request Section
     private void DrawRequestSection()
     {
         EditorGUILayout.LabelField("── REQUEST ──", EditorStyles.boldLabel);
@@ -175,10 +163,9 @@ public class RequestCreatorWindow : EditorWindow
         duration = EditorGUILayout.TextField("Duration:", duration);
         priority = EditorGUILayout.TextField("Priority:", priority);
     }
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Condition Section
-    // ──────────────────────────────────────────────
+    #region Condition Section
     private void DrawConditionSection()
     {
         EditorGUILayout.LabelField("── CONDITION ──", EditorStyles.boldLabel);
@@ -223,10 +210,9 @@ public class RequestCreatorWindow : EditorWindow
             DrawTagList(excludeTags, ref excludeTagAddIndex);
         }
     }
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Tag list drawer (used by Condition section)
-    // ──────────────────────────────────────────────
+    #region Tag list drawer
     private void DrawTagList(List<string> tagList, ref int addIndex)
     {
         List<string> allTags = tagDb.tags;
@@ -273,10 +259,9 @@ public class RequestCreatorWindow : EditorWindow
 
         EditorGUILayout.EndHorizontal();
     }
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Dialogue Pool Section
-    // ──────────────────────────────────────────────
+    #region Dialogue Pool Section
     private void DrawDialoguePoolSection()
     {
         EditorGUILayout.LabelField("── DIALOGUE POOL ──", EditorStyles.boldLabel);
@@ -344,10 +329,9 @@ public class RequestCreatorWindow : EditorWindow
             }
         }
     }
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Yarn field drawer with validation indicator
-    // ──────────────────────────────────────────────
+    #region Yarn field drawer
     private void DrawYarnField(string label, ref string value)
     {
         EditorGUILayout.BeginHorizontal();
@@ -368,10 +352,9 @@ public class RequestCreatorWindow : EditorWindow
 
         EditorGUILayout.EndHorizontal();
     }
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Create entries into databases
-    // ──────────────────────────────────────────────
+    #region Create entries into databases
     private void CreateEntries()
     {
         //Validate request name
@@ -448,14 +431,10 @@ public class RequestCreatorWindow : EditorWindow
         //Save all dirty assets
         AssetDatabase.SaveAssets();
         Debug.Log($"RequestCreator: Created request '{requestName}' (ID: {requestId}, Condition: {conditionId}, Pool: {dialoguePoolId})");
-
-        //Reset fields for next entry
-        ResetFields();
     }
+    #endregion
 
-    // ──────────────────────────────────────────────
-    // Reset all fields after creation
-    // ──────────────────────────────────────────────
+    #region Reset fields after creation
     private void ResetFields()
     {
         requestName = "";
@@ -482,4 +461,5 @@ public class RequestCreatorWindow : EditorWindow
 
         hasScannedYarn = false;
     }
+    #endregion
 }
