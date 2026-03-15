@@ -15,5 +15,5 @@ MonoBehaviour:
   entries:
   - conditionId: 001
     includeTags:
-    - HANNAH_ALIVE
+    - JIMMY_TRUSTS
     excludeTags: []

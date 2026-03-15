@@ -3,10 +3,7 @@ using UnityEngine;
 
 public static class RequestSelector
 {
-    public static List<RideRequestEntry> GetEligibleRequests(
-        RideRequestDatabaseSO requestDb,
-        ConditionDatabaseSO conditionDb,
-        List<string> worldTags)
+    public static List<RideRequestEntry> GetEligibleRequests(RideRequestDatabaseSO requestDb, ConditionDatabaseSO conditionDb, List<string> worldTags)
     {
         List<RideRequestEntry> eligibleRequestList = new List<RideRequestEntry>();
 

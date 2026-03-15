@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RideRequestDatabaseSO
   entries:
   - requestId: 001
-    requestName: Hannah
-    npcId: 001
-    spawnId: 002
-    destinationId: 001
+    requestName: Hannah_Firstmet
+    npcId: 002
+    spawnId: 004
+    destinationId: 005
     duration: 005
-    priority: 01
     conditionId: 001
     dialoguePoolId: 001

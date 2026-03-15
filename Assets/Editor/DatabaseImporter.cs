@@ -77,7 +77,7 @@ public class DatabaseImporter
 
     #region NPCs
     private const string NPC_CSV = "CsvDatabase/NPC_ID";
-    private const string NPC_FOLDER = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/NPC";
+    private const string NPC_FOLDER = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/NPC";
 
     [MenuItem("Tools/ImportCsvToDatabase/NPCs")]
     public static void ImportNPCs()
@@ -146,7 +146,7 @@ public class DatabaseImporter
     }
     #endregion
 
-    #region Dialogue Pools
+    #region Diag (obsolete)
     // private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/DialoguePoolDatabaseSO.asset";
     // private const string DIALOGUE_POOL_CSV = "CsvDatabase/DIAG_TITLE_POOL";
 
@@ -218,6 +218,17 @@ public class DatabaseImporter
     //     Debug.Log($"DialoguePoolImporter: Imported {databaseSO.entries.Count} pools.");
     // }
     #endregion
+
+    
+    
+    
+    
+    
+
+
+
+
+
 
     #region Tags
     private const string TAGS_CSV = "CsvDatabase/TAGS";
