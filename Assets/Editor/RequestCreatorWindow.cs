@@ -6,7 +6,7 @@ public class RequestCreatorWindow : EditorWindow
 {
     #region Database references
     private RideRequestDatabaseSO requestDb;
-    private ConditionDatabaseSO conditionDb;
+    //private ConditionDatabaseSO conditionDb;
     private DialoguePoolDatabaseSO dialoguePoolDb;
     private LocationDatabaseSO locationDb;
     private TagDatabaseSO tagDb;
@@ -27,11 +27,11 @@ public class RequestCreatorWindow : EditorWindow
     #endregion
 
     #region Condition fields
-    private int includeTagAddIndex = 0;
-    private int excludeTagAddIndex = 0;
-    private bool createNewCondition = true;
-    private int existingConditionIndex = 0;
-    private int loadedConditionIndex = -1;
+    //private int includeTagAddIndex = 0;
+    //private int excludeTagAddIndex = 0;
+    //private bool createNewCondition = true;
+    //private int existingConditionIndex = 0;
+    //private int loadedConditionIndex = -1;
     private List<string> includeTags = new List<string>();
     private List<string> excludeTags = new List<string>();
     #endregion
@@ -94,23 +94,23 @@ public class RequestCreatorWindow : EditorWindow
         #region Database references UI
         EditorGUILayout.LabelField("── DATABASES ──", EditorStyles.boldLabel);
         requestDb = (RideRequestDatabaseSO)EditorGUILayout.ObjectField("Request DB", requestDb, typeof(RideRequestDatabaseSO), false);
-        conditionDb = (ConditionDatabaseSO)EditorGUILayout.ObjectField("Condition DB", conditionDb, typeof(ConditionDatabaseSO), false);
+        //conditionDb = (ConditionDatabaseSO)EditorGUILayout.ObjectField("Condition DB", conditionDb, typeof(ConditionDatabaseSO), false);
         dialoguePoolDb = (DialoguePoolDatabaseSO)EditorGUILayout.ObjectField("Dialogue Pool DB", dialoguePoolDb, typeof(DialoguePoolDatabaseSO), false);
         locationDb = (LocationDatabaseSO)EditorGUILayout.ObjectField("Location DB", locationDb, typeof(LocationDatabaseSO), false);
         tagDb = (TagDatabaseSO)EditorGUILayout.ObjectField("Tag DB", tagDb, typeof(TagDatabaseSO), false);
         EditorGUILayout.Space(10);
 
-        if (requestDb == null || conditionDb == null || dialoguePoolDb == null || locationDb == null || tagDb == null)
-        {
-            EditorGUILayout.HelpBox("Assign all databases above to continue.", MessageType.Warning);
-            EditorGUILayout.EndScrollView();
-            return;
-        }
+        // if (requestDb == null || conditionDb == null || dialoguePoolDb == null || locationDb == null || tagDb == null)
+        // {
+        //     EditorGUILayout.HelpBox("Assign all databases above to continue.", MessageType.Warning);
+        //     EditorGUILayout.EndScrollView();
+        //     return;
+        // }
         #endregion
 
         DrawRequestSection();
         EditorGUILayout.Space(10);
-        DrawConditionSection();
+        //DrawConditionSection();
         EditorGUILayout.Space(10);
         DrawDialoguePoolSection();
         EditorGUILayout.Space(20);
@@ -232,21 +232,21 @@ public class RequestCreatorWindow : EditorWindow
         spawnIndex = FindLocationIndexById(locations, request.spawnId);
         destinationIndex = FindLocationIndexById(locations, request.destinationId);
 
-        int conditionIndex = FindConditionIndexById(request.conditionId);
-        if (conditionIndex >= 0)
-        {
-            createNewCondition = false;
-            existingConditionIndex = conditionIndex;
-            loadedConditionIndex = -1;
-            LoadConditionSelection(existingConditionIndex);
-        }
-        else
-        {
-            createNewCondition = true;
-            loadedConditionIndex = -1;
-            includeTags.Clear();
-            excludeTags.Clear();
-        }
+        // int conditionIndex = FindConditionIndexById(request.conditionId);
+        // if (conditionIndex >= 0)
+        // {
+        //     createNewCondition = false;
+        //     existingConditionIndex = conditionIndex;
+        //     loadedConditionIndex = -1;
+        //     LoadConditionSelection(existingConditionIndex);
+        // }
+        // else
+        // {
+        //     createNewCondition = true;
+        //     loadedConditionIndex = -1;
+        //     includeTags.Clear();
+        //     excludeTags.Clear();
+        // }
 
         int poolIndex = FindPoolIndexById(request.dialoguePoolId);
         if (poolIndex >= 0)
@@ -270,90 +270,90 @@ public class RequestCreatorWindow : EditorWindow
     #endregion
 
     #region Condition Section
-    private void DrawConditionSection()
-    {
-        EditorGUILayout.LabelField("── CONDITION ──", EditorStyles.boldLabel);
+    // private void DrawConditionSection()
+    // {
+    //     EditorGUILayout.LabelField("── CONDITION ──", EditorStyles.boldLabel);
 
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Toggle(createNewCondition, "Create New", EditorStyles.miniButtonLeft) && !createNewCondition)
-            SwitchConditionMode(true);
-        if (GUILayout.Toggle(!createNewCondition, "Use Existing", EditorStyles.miniButtonRight) && createNewCondition)
-            SwitchConditionMode(false);
-        EditorGUILayout.EndHorizontal();
+    //     EditorGUILayout.BeginHorizontal();
+    //     if (GUILayout.Toggle(createNewCondition, "Create New", EditorStyles.miniButtonLeft) && !createNewCondition)
+    //         SwitchConditionMode(true);
+    //     if (GUILayout.Toggle(!createNewCondition, "Use Existing", EditorStyles.miniButtonRight) && createNewCondition)
+    //         SwitchConditionMode(false);
+    //     EditorGUILayout.EndHorizontal();
 
-        if (!createNewCondition)
-        {
-            List<ConditionEntry> conditions = conditionDb.GetAll();
-            if (conditions.Count > 0)
-            {
-                existingConditionIndex = ClampIndex(existingConditionIndex, conditions.Count);
-                int newIndex = EditorGUILayout.Popup("Condition:", existingConditionIndex, BuildConditionLabels(conditions));
-                if (newIndex != existingConditionIndex)
-                    existingConditionIndex = newIndex;
+    //     if (!createNewCondition)
+    //     {
+    //         List<ConditionEntry> conditions = conditionDb.GetAll();
+    //         if (conditions.Count > 0)
+    //         {
+    //             existingConditionIndex = ClampIndex(existingConditionIndex, conditions.Count);
+    //             int newIndex = EditorGUILayout.Popup("Condition:", existingConditionIndex, BuildConditionLabels(conditions));
+    //             if (newIndex != existingConditionIndex)
+    //                 existingConditionIndex = newIndex;
 
-                if (loadedConditionIndex != existingConditionIndex)
-                    LoadConditionSelection(existingConditionIndex);
+    //             if (loadedConditionIndex != existingConditionIndex)
+    //                 LoadConditionSelection(existingConditionIndex);
 
-                EditorGUILayout.LabelField("ID:", conditions[existingConditionIndex].conditionId);
+    //             EditorGUILayout.LabelField("ID:", conditions[existingConditionIndex].conditionId);
 
-                EditorGUILayout.LabelField("Include Tags:");
-                DrawTagList(includeTags, ref includeTagAddIndex);
+    //             EditorGUILayout.LabelField("Include Tags:");
+    //             DrawTagList(includeTags, ref includeTagAddIndex);
 
-                EditorGUILayout.LabelField("Exclude Tags:");
-                DrawTagList(excludeTags, ref excludeTagAddIndex);
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("No conditions exist yet. Create one.", MessageType.Info);
-                SwitchConditionMode(true);
-            }
-        }
-        else
-        {
-            string nextConditionId = (conditionDb.entries.Count + 1).ToString("D3");
-            EditorGUILayout.LabelField("ID:", nextConditionId);
+    //             EditorGUILayout.LabelField("Exclude Tags:");
+    //             DrawTagList(excludeTags, ref excludeTagAddIndex);
+    //         }
+    //         else
+    //         {
+    //             EditorGUILayout.HelpBox("No conditions exist yet. Create one.", MessageType.Info);
+    //             SwitchConditionMode(true);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         string nextConditionId = (conditionDb.entries.Count + 1).ToString("D3");
+    //         EditorGUILayout.LabelField("ID:", nextConditionId);
 
-            EditorGUILayout.LabelField("Include Tags:");
-            DrawTagList(includeTags, ref includeTagAddIndex);
+    //         EditorGUILayout.LabelField("Include Tags:");
+    //         DrawTagList(includeTags, ref includeTagAddIndex);
 
-            EditorGUILayout.LabelField("Exclude Tags:");
-            DrawTagList(excludeTags, ref excludeTagAddIndex);
-        }
-    }
+    //         EditorGUILayout.LabelField("Exclude Tags:");
+    //         DrawTagList(excludeTags, ref excludeTagAddIndex);
+    //     }
+    // }
 
-    private void SwitchConditionMode(bool toCreateNew)
-    {
-        createNewCondition = toCreateNew;
-        loadedConditionIndex = -1;
-        includeTagAddIndex = 0;
-        excludeTagAddIndex = 0;
+    // private void SwitchConditionMode(bool toCreateNew)
+    // {
+    //     createNewCondition = toCreateNew;
+    //     loadedConditionIndex = -1;
+    //     includeTagAddIndex = 0;
+    //     excludeTagAddIndex = 0;
 
-        if (toCreateNew)
-        {
-            includeTags.Clear();
-            excludeTags.Clear();
-        }
-        else
-        {
-            LoadConditionSelection(existingConditionIndex);
-        }
-    }
+    //     if (toCreateNew)
+    //     {
+    //         includeTags.Clear();
+    //         excludeTags.Clear();
+    //     }
+    //     else
+    //     {
+    //         LoadConditionSelection(existingConditionIndex);
+    //     }
+    // }
 
-    private void LoadConditionSelection(int index)
-    {
-        List<ConditionEntry> conditions = conditionDb.GetAll();
-        if (conditions.Count == 0)
-            return;
+    // private void LoadConditionSelection(int index)
+    // {
+    //     List<ConditionEntry> conditions = conditionDb.GetAll();
+    //     if (conditions.Count == 0)
+    //         return;
 
-        existingConditionIndex = ClampIndex(index, conditions.Count);
-        ConditionEntry condition = conditions[existingConditionIndex];
-        loadedConditionIndex = existingConditionIndex;
+    //     existingConditionIndex = ClampIndex(index, conditions.Count);
+    //     ConditionEntry condition = conditions[existingConditionIndex];
+    //     loadedConditionIndex = existingConditionIndex;
 
-        includeTags = condition.includeTags != null ? new List<string>(condition.includeTags) : new List<string>();
-        excludeTags = condition.excludeTags != null ? new List<string>(condition.excludeTags) : new List<string>();
-        includeTagAddIndex = 0;
-        excludeTagAddIndex = 0;
-    }
+    //     includeTags = condition.includeTags != null ? new List<string>(condition.includeTags) : new List<string>();
+    //     excludeTags = condition.excludeTags != null ? new List<string>(condition.excludeTags) : new List<string>();
+    //     includeTagAddIndex = 0;
+    //     excludeTagAddIndex = 0;
+    // }
     #endregion
 
     #region Tag list drawer
@@ -560,39 +560,39 @@ public class RequestCreatorWindow : EditorWindow
         spawnIndex = ClampIndex(spawnIndex, locations.Count);
         destinationIndex = ClampIndex(destinationIndex, locations.Count);
 
-        string conditionId;
-        string conditionAction;
-        if (createNewCondition)
-        {
-            conditionId = (conditionDb.entries.Count + 1).ToString("D3");
-            conditionDb.entries.Add(new ConditionEntry
-            {
-                conditionId = conditionId,
-                includeTags = new List<string>(includeTags),
-                excludeTags = new List<string>(excludeTags)
-            });
-            conditionAction = "created";
-        }
-        else
-        {
-            if (conditionDb.entries.Count == 0)
-            {
-                Debug.LogWarning("RequestCreator: No existing condition to update.");
-                return;
-            }
+        // string conditionId;
+        // string conditionAction;
+        // if (createNewCondition)
+        // {
+        //     conditionId = (conditionDb.entries.Count + 1).ToString("D3");
+        //     conditionDb.entries.Add(new ConditionEntry
+        //     {
+        //         conditionId = conditionId,
+        //         includeTags = new List<string>(includeTags),
+        //         excludeTags = new List<string>(excludeTags)
+        //     });
+        //     conditionAction = "created";
+        // }
+        // else
+        // {
+        //     if (conditionDb.entries.Count == 0)
+        //     {
+        //         Debug.LogWarning("RequestCreator: No existing condition to update.");
+        //         return;
+        //     }
 
-            existingConditionIndex = ClampIndex(existingConditionIndex, conditionDb.entries.Count);
-            ConditionEntry existing = conditionDb.entries[existingConditionIndex];
-            conditionId = existing.conditionId;
-            existing.includeTags = new List<string>(includeTags);
-            existing.excludeTags = new List<string>(excludeTags);
-            conditionDb.entries[existingConditionIndex] = existing;
-            conditionAction = "updated";
-        }
-        EditorUtility.SetDirty(conditionDb);
+        //     existingConditionIndex = ClampIndex(existingConditionIndex, conditionDb.entries.Count);
+        //     ConditionEntry existing = conditionDb.entries[existingConditionIndex];
+        //     conditionId = existing.conditionId;
+        //     existing.includeTags = new List<string>(includeTags);
+        //     existing.excludeTags = new List<string>(excludeTags);
+        //     conditionDb.entries[existingConditionIndex] = existing;
+        //     conditionAction = "updated";
+        // }
+        // EditorUtility.SetDirty(conditionDb);
 
         string dialoguePoolId;
-        string poolAction;
+        //string poolAction;
         if (createNewPool)
         {
             if (string.IsNullOrEmpty(poolName))
@@ -611,7 +611,7 @@ public class RequestCreatorWindow : EditorWindow
                 during = new List<string>(during),
                 end = end
             });
-            poolAction = "created";
+            //poolAction = "created";
         }
         else
         {
@@ -636,7 +636,7 @@ public class RequestCreatorWindow : EditorWindow
             existing.during = new List<string>(during);
             existing.end = end;
             dialoguePoolDb.entries[existingPoolIndex] = existing;
-            poolAction = "updated";
+            //poolAction = "updated";
         }
         EditorUtility.SetDirty(dialoguePoolDb);
 
@@ -654,7 +654,7 @@ public class RequestCreatorWindow : EditorWindow
                 destinationId = locations[destinationIndex].id,
                 duration = duration,
                 //priority = DefaultPriority,
-                conditionId = conditionId,
+                //conditionId = conditionId,
                 dialoguePoolId = dialoguePoolId
             });
             requestAction = "created";
@@ -675,7 +675,7 @@ public class RequestCreatorWindow : EditorWindow
             existing.spawnId = locations[spawnIndex].id;
             existing.destinationId = locations[destinationIndex].id;
             existing.duration = duration;
-            existing.conditionId = conditionId;
+            //existing.conditionId = conditionId;
             existing.dialoguePoolId = dialoguePoolId;
             requestDb.entries[existingRequestIndex] = existing;
             requestAction = "updated";
@@ -685,14 +685,14 @@ public class RequestCreatorWindow : EditorWindow
         AssetDatabase.SaveAssets();
 
         Debug.Log(
-            $"RequestCreator: Request {requestAction} '{requestName}' (ID: {requestId}), " +
-            $"Condition {conditionAction} ({conditionId}), Pool {poolAction} ({dialoguePoolId})."
+            $"RequestCreator: Request {requestAction} '{requestName}' (ID: {requestId}), "
+            //$"Condition {conditionAction} ({conditionId}), Pool {poolAction} ({dialoguePoolId})."
         );
 
         if (!createNewRequest)
             LoadRequestSelection(existingRequestIndex);
-        if (!createNewCondition)
-            LoadConditionSelection(existingConditionIndex);
+        // if (!createNewCondition)
+        //     LoadConditionSelection(existingConditionIndex);
         if (!createNewPool)
             LoadPoolSelection(existingPoolIndex);
     }
@@ -735,13 +735,13 @@ public class RequestCreatorWindow : EditorWindow
         return labels;
     }
 
-    private static string[] BuildConditionLabels(List<ConditionEntry> conditions)
-    {
-        string[] labels = new string[conditions.Count];
-        for (int i = 0; i < conditions.Count; i++)
-            labels[i] = $"{conditions[i].conditionId} - Include: {string.Join(", ", conditions[i].includeTags)} | Exclude: {string.Join(", ", conditions[i].excludeTags)}";
-        return labels;
-    }
+    // private static string[] BuildConditionLabels(List<ConditionEntry> conditions)
+    // {
+    //     string[] labels = new string[conditions.Count];
+    //     for (int i = 0; i < conditions.Count; i++)
+    //         labels[i] = $"{conditions[i].conditionId} - Include: {string.Join(", ", conditions[i].includeTags)} | Exclude: {string.Join(", ", conditions[i].excludeTags)}";
+    //     return labels;
+    // }
 
     private static string[] BuildPoolLabels(List<DialoguePoolEntry> pools)
     {
@@ -774,16 +774,16 @@ public class RequestCreatorWindow : EditorWindow
         return 0;
     }
 
-    private int FindConditionIndexById(string conditionId)
-    {
-        List<ConditionEntry> conditions = conditionDb.GetAll();
-        for (int i = 0; i < conditions.Count; i++)
-        {
-            if (conditions[i].conditionId == conditionId)
-                return i;
-        }
-        return -1;
-    }
+    // private int FindConditionIndexById(string conditionId)
+    // {
+    //     List<ConditionEntry> conditions = conditionDb.GetAll();
+    //     for (int i = 0; i < conditions.Count; i++)
+    //     {
+    //         if (conditions[i].conditionId == conditionId)
+    //             return i;
+    //     }
+    //     return -1;
+    // }
 
     private int FindPoolIndexById(string poolId)
     {
@@ -810,11 +810,11 @@ public class RequestCreatorWindow : EditorWindow
         destinationIndex = 0;
         duration = "005";
 
-        createNewCondition = true;
-        existingConditionIndex = 0;
-        loadedConditionIndex = -1;
-        includeTagAddIndex = 0;
-        excludeTagAddIndex = 0;
+        //createNewCondition = true;
+        //existingConditionIndex = 0;
+        //loadedConditionIndex = -1;
+        //includeTagAddIndex = 0;
+        //excludeTagAddIndex = 0;
         includeTags.Clear();
         excludeTags.Clear();
 

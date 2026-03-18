@@ -14,9 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialoguePoolDatabaseSO
   entries:
   - poolId: 001
-    poolName: Hannah_ButJim
-    transition: transition_002
-    getOn: geton_002
+    poolName: yay
+    transition: 001
+    getOn: yay
     during:
-    - during_002
-    end: end_002
+    - yay
+    end: yay
+  - poolId: 002
+    poolName: yo
+    transition: 002
+    getOn: yo
+    during:
+    - yo
+    end: yo

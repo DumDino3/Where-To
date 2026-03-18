@@ -15,18 +15,18 @@ public static class RequestSelector
 
         List<RideRequestEntry> requests = requestDb.GetAll();
 
-        foreach (RideRequestEntry request in requests)
-        {
-            ConditionEntry? condition = conditionDb.Search(request.conditionId);
-            if (condition == null)
-            {
-                Debug.LogWarning($"RequestSelector: Missing condition '{request.conditionId}' for request '{request.requestId}'");
-                continue;
-            }
+        // foreach (RideRequestEntry request in requests)
+        // {
+        //     ConditionEntry? condition = conditionDb.Search(request.conditionId);
+        //     if (condition == null)
+        //     {
+        //         Debug.LogWarning($"RequestSelector: Missing condition '{request.conditionId}' for request '{request.requestId}'");
+        //         continue;
+        //     }
 
-            if (IsConditionMet(condition.Value, worldTags))
-                eligibleRequestList.Add(request);
-        }
+        //     if (IsConditionMet(condition.Value, worldTags))
+        //         eligibleRequestList.Add(request);
+        // }
 
         return eligibleRequestList;
     }
