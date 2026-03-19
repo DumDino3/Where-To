@@ -103,6 +103,7 @@ public class SpawnPaceManager : MonoBehaviour
     
     public void PushDataIntoQueue(string requestID)
     {
+        Debug.Log($"pushed in: {requestID}");
         _schedule.TryAddRawQuestId(requestID);
     }
     

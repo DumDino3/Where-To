@@ -31,5 +31,4 @@ public sealed class RequestScheduler
         
         return list.OrderByDescending(RequestIDParser.GetPriorityFromCoreID);
     }
-    
 }

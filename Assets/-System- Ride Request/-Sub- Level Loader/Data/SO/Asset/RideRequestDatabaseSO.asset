@@ -13,11 +13,103 @@ MonoBehaviour:
   m_Name: RideRequestDatabaseSO
   m_EditorClassIdentifier: Assembly-CSharp::RideRequestDatabaseSO
   entries:
-  - requestId: 001
-    requestName: Hannah_Firstmet
-    npcId: 002
-    spawnId: 004
-    destinationId: 005
-    duration: 005
-    conditionId: 001
-    dialoguePoolId: 001
+  - day: 1
+    requestName: zero.one
+    requestId: 001
+    timeSegment: 01
+    priority: 01
+    duration: 001
+    npcId: hannah
+    dialoguePoolId: yay
+    spawnId: market
+    destinationId: apartment
+    condition:
+    - SET_0102
+  - day: 1
+    requestName: zero.two
+    requestId: 002
+    timeSegment: 01
+    priority: 02
+    duration: 002
+    npcId: jimmy
+    dialoguePoolId: yo
+    spawnId: school
+    destinationId: tyrell
+    condition:
+    - SET_0102
+    - HEY
+  - day: 1
+    requestName: zero.three
+    requestId: 003
+    timeSegment: 01
+    priority: 03
+    duration: 003
+    npcId: hannah
+    dialoguePoolId: yar
+    spawnId: tyrell
+    destinationId: school
+    condition:
+    - SET_0304
+  - day: 1
+    requestName: zero.four
+    requestId: 004
+    timeSegment: 01
+    priority: 04
+    duration: 004
+    npcId: jimmy
+    dialoguePoolId: yip
+    spawnId: apartment
+    destinationId: market
+    condition:
+    - SET_0304
+    - HEY
+  - day: 1
+    requestName: zero.one
+    requestId: 005
+    timeSegment: 02
+    priority: 01
+    duration: 001
+    npcId: hannah
+    dialoguePoolId: yay
+    spawnId: market
+    destinationId: apartment
+    condition:
+    - SET_0102
+  - day: 1
+    requestName: zero.two
+    requestId: 006
+    timeSegment: 02
+    priority: 02
+    duration: 002
+    npcId: jimmy
+    dialoguePoolId: yo
+    spawnId: school
+    destinationId: tyrell
+    condition:
+    - SET_0102
+    - HEY
+  - day: 1
+    requestName: zero.three
+    requestId: 007
+    timeSegment: 02
+    priority: 03
+    duration: 003
+    npcId: hannah
+    dialoguePoolId: yar
+    spawnId: tyrell
+    destinationId: school
+    condition:
+    - SET_0304
+  - day: 1
+    requestName: zero.four
+    requestId: 008
+    timeSegment: 02
+    priority: 04
+    duration: 004
+    npcId: jimmy
+    dialoguePoolId: yip
+    spawnId: apartment
+    destinationId: market
+    condition:
+    - SET_0304
+    - HEY

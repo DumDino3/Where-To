@@ -21,7 +21,7 @@ public class RandomRequestGen : MonoBehaviour
     {
         for (int i = 0; i < questLimits; i++)
         {
-            durationID = UnityEngine.Random.Range(9, 10); 
+            durationID = UnityEngine.Random.Range(9, 10);
             pickupID = UnityEngine.Random.Range(1, 5);
         
             do
@@ -31,7 +31,7 @@ public class RandomRequestGen : MonoBehaviour
             while (dropOffID == pickupID);
         
             priorityID = 0;
-            timeSeg = 0;
+            timeSeg = -1;
         
             string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}{timeSeg:D2}";
             onQuestGenerated?.Invoke(questID);

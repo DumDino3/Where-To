@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 public struct RideRequestEntry
 {
-    public string requestId;
+    public string day;
     public string requestName;
+    public string requestId;
+    public string timeSegment;
+    public string priority;
+    public string duration;
     public string npcId;
+    public string dialoguePoolId;
     public string spawnId;
     public string destinationId;
-    public string duration;
-    //public string priority;
-    public string conditionId;
-    public string dialoguePoolId;
+    public List<string> condition;
 }

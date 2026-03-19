@@ -18,10 +18,9 @@ public class LocationDatabaseSO : ScriptableObject
         }
     }
 
-    //Embedded search function
-    public LocationEntry? Search(string id)
+    public LocationEntry? Search(string name)
     {
-        return lookup.TryGetValue(id, out LocationEntry entry) ? entry : null;
+        return lookup.TryGetValue(name, out LocationEntry entry) ? entry : null;
     }
 
     //Embedded search all function

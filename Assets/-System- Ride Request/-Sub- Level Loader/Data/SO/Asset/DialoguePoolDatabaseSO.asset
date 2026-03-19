@@ -13,17 +13,39 @@ MonoBehaviour:
   m_Name: DialoguePoolDatabaseSO
   m_EditorClassIdentifier: Assembly-CSharp::DialoguePoolDatabaseSO
   entries:
-  - poolId: 001
-    poolName: yay
-    transition: 001
+  - poolName: yay
+    poolId: 001
+    transition: yay
     getOn: yay
+    end: yay
     during:
     - yay
-    end: yay
-  - poolId: 002
-    poolName: yo
-    transition: 002
+    - yay1
+    - yay2
+  - poolName: yo
+    poolId: 002
+    transition: yo
     getOn: yo
+    end: yo
     during:
     - yo
-    end: yo
+    - yo1
+    - yo2
+  - poolName: yar
+    poolId: 003
+    transition: yar
+    getOn: yar
+    end: yar
+    during:
+    - yar
+    - yar1
+    - yar2
+  - poolName: yip
+    poolId: 004
+    transition: yip
+    getOn: yip
+    end: yip
+    during:
+    - yip
+    - yip1
+    - yip2

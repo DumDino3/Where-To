@@ -13,9 +13,96 @@ public class DatabaseImporter
         ImportNPCs();
         ImportDialoguePools();
         ImportTags();
+        ImportRideRequests();
         Debug.Log("DatabaseImporter: Worked well :)");
     }
     #endregion
+
+
+
+    #region Ride Request
+    private const string RIDE_REQUEST_CSV = "CsvDatabase/RIDE_REQUEST";
+    private const string RIDE_REQUEST_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/RideRequestDatabaseSO.asset";
+
+    [MenuItem("Tools/ImportCsvToDatabase/Ride Requests")]
+    public static void ImportRideRequests()
+    {
+        // Load CSV file into script
+        TextAsset csv = Resources.Load<TextAsset>(RIDE_REQUEST_CSV);
+        if (csv == null)
+        {
+            Debug.LogError("CSV not found at Resources/" + RIDE_REQUEST_CSV);
+            return;
+        }
+
+        // Check for SO asset, if none create a new one. Regardless of SO asset presence, clear the list before write.
+        RideRequestDatabaseSO databaseSO = AssetDatabase.LoadAssetAtPath<RideRequestDatabaseSO>(RIDE_REQUEST_ASSET);
+        if (databaseSO == null)
+        {
+            databaseSO = ScriptableObject.CreateInstance<RideRequestDatabaseSO>();
+            AssetDatabase.CreateAsset(databaseSO, RIDE_REQUEST_ASSET);
+        }
+        databaseSO.entries.Clear();
+
+        // Split CSV file into lines
+        string[] lines = csv.text.Split('\n');
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i].Trim().TrimEnd(',');
+            if (string.IsNullOrEmpty(line)) continue;
+
+            string[] fields = line.Split(',');
+            if (fields.Length < 10) continue; // Ensure all columns are present
+
+            List<string> conditionList = new List<string>();
+            if (fields.Length >= 10 && !string.IsNullOrWhiteSpace(fields[5]))
+            {
+                string[] duringParts = fields[10].Split('/');
+                foreach (var part in duringParts)
+                {
+                    string trimmed = part.Trim();
+                    if (!string.IsNullOrEmpty(trimmed))
+                        conditionList.Add(trimmed);
+                }
+            }
+
+
+            // Example: parse fields
+            string day = fields[0].Trim();
+            string name = fields[1].Trim();
+            string id = fields[2].Trim();
+            string segment = fields[3].Trim();
+            string priority = fields[4].Trim();
+            string duration = fields[5].Trim();
+            string npc = fields[6].Trim();
+            string dialogue = fields[7].Trim();
+            string spawn = fields[8].Trim();
+            string destination = fields[9].Trim();
+
+            // Add to database
+            databaseSO.entries.Add(new RideRequestEntry
+            {
+                day = day,
+                requestName = name,
+                requestId = id,
+                timeSegment = segment,
+                priority = priority,
+                duration = duration,
+                npcId = npc,
+                dialoguePoolId = dialogue,
+                spawnId = spawn,
+                destinationId = destination,
+                condition = conditionList
+            });
+        }
+
+        EditorUtility.SetDirty(databaseSO);
+        AssetDatabase.SaveAssets();
+        Debug.Log($"RideRequestImporter: Imported {databaseSO.entries.Count} ride requests.");
+    }
+    #endregion
+
+
 
     #region Locations
     private const string LOCATION_CSV = "CsvDatabase/LOCATION_ID";
@@ -75,6 +162,9 @@ public class DatabaseImporter
     }
     #endregion
 
+
+
+
     #region NPCs
     private const string NPC_CSV = "CsvDatabase/NPC_ID";
     private const string NPC_FOLDER = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/NPC";
@@ -116,14 +206,9 @@ public class DatabaseImporter
             string id = fields[1].Trim();
             string displayName = fields[2].Trim();
             string modelId = fields[3].Trim();
-            if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogWarning($"NpcImporter: No Id found on row {i}");
-                continue;
-            }
 
-            //Create or update individual NpcSO asset using displayName as file name
-            string assetPath = $"{NPC_FOLDER}/{displayName}.asset";
+            //Create or update individual NpcSO asset using npcName as file name
+            string assetPath = $"{NPC_FOLDER}/{npcName}.asset";
             NpcSO npc = AssetDatabase.LoadAssetAtPath<NpcSO>(assetPath);
             if (npc == null)
             {
@@ -145,6 +230,9 @@ public class DatabaseImporter
         Debug.Log($"NpcImporter: Created/updated {created} NPC assets.");
     }
     #endregion
+
+
+
 
     #region Dialogue Pool
     private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/DialoguePoolDatabaseSO.asset";
@@ -184,29 +272,28 @@ public class DatabaseImporter
             string[] fields = line.Split(',');
             if (fields.Length < 5) continue;
 
-            //Column A is pool name, B-E are yarn node titles
-            string poolName = fields[0].Trim();
-            if (string.IsNullOrEmpty(poolName))
+            //During is a bunch of string separated by "/" in field 5, split them and add to a list
+            List<string> duringList = new List<string>();
+            if (fields.Length >= 5 && !string.IsNullOrWhiteSpace(fields[5]))
             {
-                Debug.LogWarning($"DialoguePoolImporter: no pool name found on row {i}");
-                continue;
+                string[] duringParts = fields[5].Split('/');
+                foreach (var part in duringParts)
+                {
+                    string trimmed = part.Trim();
+                    if (!string.IsNullOrEmpty(trimmed))
+                        duringList.Add(trimmed);
+                }
             }
 
-            //Auto-assign pool id as zero-padded string
-            string poolId = poolCounter.ToString("D3");
-
-            //During is a list, currently one entry per CSV row. Creator tool will allow multiple later.
-            List<string> duringList = new List<string>();
-            duringList.Add(fields[3].Trim());
-
+            //Assign into SO
             databaseSO.entries.Add(new DialoguePoolEntry
             {
-                poolId = poolId,
-                poolName = poolName,
-                transition = fields[1].Trim(),
-                getOn = fields[2].Trim(),
-                during = duringList,
-                end = fields[4].Trim()
+                poolName = fields[0].Trim(),
+                poolId = fields[1].Trim(),
+                transition = fields[2].Trim(),
+                getOn = fields[3].Trim(),
+                end = fields[4].Trim(),
+                during = duringList
             });
 
             poolCounter++;
@@ -218,14 +305,6 @@ public class DatabaseImporter
         Debug.Log($"DialoguePoolImporter: imported {databaseSO.entries.Count} pools.");
     }
     #endregion
-
-    
-    
-    
-    
-    
-
-
 
 
 

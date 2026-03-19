@@ -13,15 +13,9 @@ public class DialoguePoolDatabaseSO : ScriptableObject
         lookup = new Dictionary<string, DialoguePoolEntry>();
         foreach (DialoguePoolEntry entry in entries)
         {
-            if (!lookup.TryAdd(entry.poolId, entry))
+            if (!lookup.TryAdd(entry.poolName, entry))
                 Debug.LogWarning($"DialoguePoolDatabaseSO: Duplicate pool ID {entry.poolId}");
         }
-    }
-
-    //Embedded search function
-    public DialoguePoolEntry? Search(string poolId)
-    {
-        return lookup.TryGetValue(poolId, out DialoguePoolEntry entry) ? entry : null;
     }
 
     //Embedded search all function

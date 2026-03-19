@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: TagDatabaseSO
   m_EditorClassIdentifier: Assembly-CSharp::TagDatabaseSO
   tags:
+  - SET_0102
+  - SET_0304
+  - HEY
+  - SHORTCUT_001
+  - SHORTCUT_002
+  - SHORTCUT_003
+  - SHORTCUT_004
   - HANNAH_MET
   - HANNAH_ALIVE
   - JIMMY_TRUSTS
   - DELIVERED_MESSAGE
-  - CORP_HIRING
-  - SHORTCUT_001
-  - SHORTCUT_002
-  - SHORTCUT_003
