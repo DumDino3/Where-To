@@ -8,7 +8,6 @@ public class SpawnEditorManager : EditorWindow
 {
     static event Action OnSpawnPointCreated;
     
-    
     [SerializeField]
     private VisualTreeAsset m_VisualTreeAsset = default;
 
@@ -177,7 +176,6 @@ public class SpawnEditorManager : EditorWindow
         
     }
 
-    
     
     
 

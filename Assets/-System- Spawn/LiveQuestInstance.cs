@@ -48,14 +48,53 @@ public class LiveQuestInstance : MonoBehaviour
         StartCountdown(remaining);
     }
 
+    #region Hieu Update to use the actual name
+    //-------------------------------------------------------------------------
+    // private void UpdateUI()
+    // {
+    //     if (pickupText != null)
+    //         pickupText.text = $"Pickup: {pickupID}";
+
+    //     if (dropOffText != null)
+    //         dropOffText.text = $"Drop Off: {dropOffID}";
+    // }
+    //-------------------------------------------------------------------------
+
+    private const string LOCATION_DB_PATH = "SO/Asset/LocationDatabaseSO";
+    private LocationDatabaseSO locationDatabase;
+
     private void UpdateUI()
     {
+
         if (pickupText != null)
-            pickupText.text = $"Pickup: {pickupID}";
+            pickupText.text = $"Pickup: {ExtractTrueName(pickupID)}";
 
         if (dropOffText != null)
-            dropOffText.text = $"Drop Off: {dropOffID}";
+            dropOffText.text = $"Drop Off: {ExtractTrueName(dropOffID)}";
     }
+
+    private void EnsureLocationDatabase()
+    {
+        if (locationDatabase == null)
+            locationDatabase = Resources.Load<LocationDatabaseSO>(LOCATION_DB_PATH);
+    }
+    private string ExtractTrueName(int id)
+    {
+        //Load database and set a trueName variable
+        EnsureLocationDatabase();
+        string trueName = null;
+
+        //Search by id from location database and extract entry's name into trueName
+        if (locationDatabase != null)
+        {
+            var entry = locationDatabase.SearchByID(id);
+            if (entry.HasValue)
+                trueName = entry.Value.name;
+        }
+
+        return trueName;
+    }
+    #endregion
 
     private void StartCountdown(float remaining)
     {

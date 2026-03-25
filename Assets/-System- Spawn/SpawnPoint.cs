@@ -14,16 +14,49 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField] private Color gizmoWireColor = Color.green;
     [SerializeField] private Color selectedGizmoColor = new Color(1f, 0.92f, 0.016f, 0.4f); // Yellow
 
+    #region Hieu Adjustment for true name display
+    //-----------------------------------------------------------
+    // private void OnValidate()
+    // {
+    //     string targetName = $"Spawn Point {spawnPointID}";
+    //     if (gameObject.name != targetName)
+    //     {
+    //         gameObject.name = targetName;
+    //     }
+
+    //     onSpawnPointChanged?.Invoke();
+    // }
+    //-----------------------------------------------------------
+    private const string LOCATION_DB_PATH = "SO/Asset/LocationDatabaseSO";
+    private LocationDatabaseSO locationDatabase;
+
+    private void EnsureLocationDatabase()
+    {
+        if (locationDatabase == null)
+            locationDatabase = Resources.Load<LocationDatabaseSO>(LOCATION_DB_PATH);
+    }
+
     private void OnValidate()
     {
-        string targetName = $"Spawn Point {spawnPointID}";
-        if (gameObject.name != targetName)
+        //Load database and set a trueName variable
+        EnsureLocationDatabase();
+        string trueName = null;
+
+        //Search by id from location database and extract entry's name into trueName
+        if (locationDatabase != null)
         {
-            gameObject.name = targetName;
+            var entry = locationDatabase.SearchByID(spawnPointID);
+            if (entry.HasValue)
+                trueName = entry.Value.name;
         }
+
+        //Overide current name
+        if (gameObject.name != trueName)
+            gameObject.name = trueName;
 
         onSpawnPointChanged?.Invoke();
     }
+    #endregion
 
     private void Update()
     {
