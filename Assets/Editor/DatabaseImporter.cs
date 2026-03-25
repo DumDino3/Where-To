@@ -22,7 +22,7 @@ public class DatabaseImporter
 
     #region Ride Request
     private const string RIDE_REQUEST_CSV = "CsvDatabase/RIDE_REQUEST";
-    private const string RIDE_REQUEST_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/RideRequestDatabaseSO.asset";
+    private const string RIDE_REQUEST_ASSET = "Assets/Resources/SO/Asset/RideRequestDatabaseSO.asset";
 
     [MenuItem("Tools/ImportCsvToDatabase/Ride Requests")]
     public static void ImportRideRequests()
@@ -106,7 +106,7 @@ public class DatabaseImporter
 
     #region Locations
     private const string LOCATION_CSV = "CsvDatabase/LOCATION_ID";
-    private const string LOCATION_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/LocationDatabaseSO.asset";
+    private const string LOCATION_ASSET = "Assets/Resources/SO/Asset/LocationDatabaseSO.asset";
 
     [MenuItem("Tools/ImportCsvToDatabase/Locations")]
     public static void ImportLocations()
@@ -167,7 +167,7 @@ public class DatabaseImporter
 
     #region NPCs
     private const string NPC_CSV = "CsvDatabase/NPC_ID";
-    private const string NPC_FOLDER = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/NPC";
+    private const string NPC_FOLDER = "Assets/Resources/SO/NPC";
 
     [MenuItem("Tools/ImportCsvToDatabase/NPCs")]
     public static void ImportNPCs()
@@ -235,7 +235,7 @@ public class DatabaseImporter
 
 
     #region Dialogue Pool
-    private const string DIALOGUE_POOL_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/DialoguePoolDatabaseSO.asset";
+    private const string DIALOGUE_POOL_ASSET = "Assets/Resources/SO/Asset/DialoguePoolDatabaseSO.asset";
     private const string DIALOGUE_POOL_CSV = "CsvDatabase/DIALOGUE_POOL";
 
     [MenuItem("Tools/ImportCsvToDatabase/Dialogue Pools")]
@@ -311,7 +311,7 @@ public class DatabaseImporter
 
     #region Tags
     private const string TAGS_CSV = "CsvDatabase/TAGS";
-    private const string TAGS_ASSET = "Assets/-System- Ride Request/-Sub- Level Loader/Data/SO/Asset/TagDatabaseSO.asset";
+    private const string TAGS_ASSET = "Assets/Resources/SO/Asset/TagDatabaseSO.asset";
 
     [MenuItem("Tools/ImportCsvToDatabase/Tags")]
     public static void ImportTags()

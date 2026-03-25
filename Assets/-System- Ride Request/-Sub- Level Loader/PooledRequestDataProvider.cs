@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class PooledRequestDataProvider : MonoBehaviour
 {
-    public SpawnPaceManager paceManager; // Reference to the system that accepts quest IDs
+    private SpawnPaceManager paceManager; // Reference to the system that accepts quest IDs
     private PooledRequestIDCompiler idCompiler;
 
     private void Awake()
     {
         idCompiler = GameObject.FindAnyObjectByType<PooledRequestIDCompiler>();
+        paceManager = FindAnyObjectByType<SpawnPaceManager>();
         PushAllToQueue(idCompiler.CompileIds());
     }
 

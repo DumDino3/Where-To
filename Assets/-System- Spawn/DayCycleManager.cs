@@ -51,7 +51,9 @@ public class DayCycleManager : MonoBehaviour
         if (currentTimeSeg <= timeSegs && isDayStarted == true)
         {
             onDayStarted?.Invoke();
-            currentActualTime += Time.deltaTime;
+            
+            //Hieu: added timeperseg - 1 for insant 1st seg initiation
+            currentActualTime += Time.deltaTime + timePerSegs - 1;
             if (currentActualTime >= timePerSegs)
             {
                 currentTimeSeg += 1;

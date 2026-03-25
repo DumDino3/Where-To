@@ -3,8 +3,33 @@ using System.Collections.Generic;
 
 public class PooledRequestIDCompiler : MonoBehaviour
 {
-    public RideRequestDatabaseSO database;
-    public LocationDatabaseSO locationDatabase;
+    private RideRequestDatabaseSO database;
+    private LocationDatabaseSO locationDatabase;
+
+    private const string RIDEREQUEST_DB_PATH = "SO/Asset/RideRequestDatabaseSO";
+    private const string LOCATION_DB_PATH = "SO/Asset/LocationDatabaseSO";
+
+    private void Awake()
+    {
+        EnsureDatabases();
+    }
+
+    private void OnValidate()
+    {
+        EnsureDatabases();
+    }
+
+    private void EnsureDatabases()
+    {
+        if (database == null)
+            database = Resources.Load<RideRequestDatabaseSO>(RIDEREQUEST_DB_PATH);
+
+        if (locationDatabase == null)
+            locationDatabase = Resources.Load<LocationDatabaseSO>(LOCATION_DB_PATH);
+
+        if (database == null || locationDatabase == null)
+            Debug.LogWarning($"PooledRequestIDCompiler missing DB refs: database={database}, locationDatabase={locationDatabase}");
+    }
 
     public List<string> CompileIds()
     {
@@ -12,8 +37,8 @@ public class PooledRequestIDCompiler : MonoBehaviour
 
         foreach (var entry in database.GetAll())
         {
-            var spawnEntry = locationDatabase.Search(entry.spawnId);
-            var destinationEntry = locationDatabase.Search(entry.destinationId);
+            var spawnEntry = locationDatabase.SearchByName(entry.spawnId);
+            var destinationEntry = locationDatabase.SearchByName(entry.destinationId);
 
             string spawnId = spawnEntry?.id ?? entry.spawnId;
             string destinationId = destinationEntry?.id ?? entry.destinationId;
