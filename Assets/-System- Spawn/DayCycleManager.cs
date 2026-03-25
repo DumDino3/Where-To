@@ -24,10 +24,16 @@ public class DayCycleManager : MonoBehaviour
     public static event Action<int> initializeTimeSeg;
     
     
-    
+    // Hieu adjustment to start first segment right away
     private void Start()
     {
+        currentTimeSeg = 0;
         EstablishSegs();
+        
+        currentActualTime = timePerSegs - 1f;
+
+        onTimeSegsChanged?.Invoke(currentTimeSeg);
+        onDayStarted?.Invoke();
     }
 
     private void Update()
@@ -40,7 +46,7 @@ public class DayCycleManager : MonoBehaviour
     {
         currentActualTime = 0;
         totalTime = timeSegs * timePerSegs;
-        for (int i = 0; i < timeSegs; i++)
+        for (int i = 1; i < timeSegs; i++)
         {
             initializeTimeSeg.Invoke(i);
         }
@@ -52,8 +58,7 @@ public class DayCycleManager : MonoBehaviour
         {
             onDayStarted?.Invoke();
             
-            //Hieu: added timeperseg - 1 for insant 1st seg initiation
-            currentActualTime += Time.deltaTime + timePerSegs - 1;
+            currentActualTime += Time.deltaTime;
             if (currentActualTime >= timePerSegs)
             {
                 currentTimeSeg += 1;

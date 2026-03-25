@@ -67,10 +67,10 @@ public class LiveQuestInstance : MonoBehaviour
     {
 
         if (pickupText != null)
-            pickupText.text = $"Pickup: {ExtractTrueName(pickupID)}";
+            pickupText.text = $"Pick: {ExtractTrueName(pickupID)}";
 
         if (dropOffText != null)
-            dropOffText.text = $"Drop Off: {ExtractTrueName(dropOffID)}";
+            dropOffText.text = $"Drop: {ExtractTrueName(dropOffID)}";
     }
 
     private void EnsureLocationDatabase()

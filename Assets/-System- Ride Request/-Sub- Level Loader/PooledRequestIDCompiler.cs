@@ -46,7 +46,7 @@ public class PooledRequestIDCompiler : MonoBehaviour
             string id = entry.duration + spawnId + destinationId + entry.priority + entry.timeSegment;
             compiledIds.Add(id);
         }
-
+    
         return compiledIds;
     }
 }
