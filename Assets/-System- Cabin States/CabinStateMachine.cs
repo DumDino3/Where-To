@@ -7,7 +7,7 @@ public class CabinStateMachine: StateMachine<CabinStateMachine.CabinStates>
 {
     
     public static event Action<CabinStates> OnCabinStateChanged;
-
+    
     public enum CabinStates
     {
         Picked,
@@ -33,7 +33,6 @@ public class CabinStateMachine: StateMachine<CabinStateMachine.CabinStates>
     {
         QueueNextState(CabinStates.Dropped);
         OnCabinStateChanged?.Invoke(CabinStates.Dropped);
-        SetIdle();
     }
     
     public void SetIdle()
@@ -41,5 +40,4 @@ public class CabinStateMachine: StateMachine<CabinStateMachine.CabinStates>
         QueueNextState(CabinStates.Idling);
         OnCabinStateChanged?.Invoke(CabinStates.Idling);
     }
-    
 }

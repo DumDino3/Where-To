@@ -30,6 +30,7 @@ public class DayCycleManager : MonoBehaviour
         currentTimeSeg = 0;
         EstablishSegs();
         
+        // Plays only once per start to set first segment transition right away
         currentActualTime = timePerSegs - 1f;
 
         onTimeSegsChanged?.Invoke(currentTimeSeg);

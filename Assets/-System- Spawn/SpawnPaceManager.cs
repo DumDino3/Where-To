@@ -135,7 +135,7 @@ public class SpawnPaceManager : MonoBehaviour
             for (int i = 0; i < perPriorityActiveLimit - currentActiveQuests; i++)
             {
                 int coreId = _perSegmentsQueue.PopCoreIDFromQueue();
-                if (coreId == 0) return; // this means the queue is empty, so we should stop trying to pull from it.
+                if (coreId == 0) return; //this means the queue is empty, so we should stop trying to pull from it.
                 var (duration, pickup, dropoff) = RequestIDParser.ParseCoreID(coreId);
                 OnRequestSpawned?.Invoke(duration, pickup, dropoff);
                 currentActiveQuests += 1;
@@ -185,6 +185,4 @@ public class SpawnPaceManager : MonoBehaviour
     {
         PushDataIntoLive(currentTimeSeg);
     }
-    
-    
 }

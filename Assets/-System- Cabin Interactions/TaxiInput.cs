@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Taxi : MonoBehaviour
+public class TaxiInput : MonoBehaviour
 {
     private CabinStateMachine cabinStateMachine;
     private bool isPickingUp = false;

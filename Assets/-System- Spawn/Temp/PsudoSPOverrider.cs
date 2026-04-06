@@ -10,5 +10,4 @@ public class PsudoSPOverrider: MonoBehaviour
     {
         SpawnPointOverrideMediator.OverrideSpawnPoint(spawnPointIDToOverride);
     }
-    
 }
