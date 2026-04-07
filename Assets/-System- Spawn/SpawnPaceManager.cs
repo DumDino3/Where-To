@@ -165,7 +165,7 @@ public class SpawnPaceManager : MonoBehaviour
     }
 
 
-    private void OnCabinStateUpdated(CabinStateMachine.CabinStates state)
+    private void OnCabinStateUpdated(CabinStateMachine.State state)
     {
         var result = _flow.HandleCabinState(state);
 

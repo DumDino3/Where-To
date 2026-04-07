@@ -15,8 +15,8 @@ public class DebugConsole : MonoBehaviour
 
     void Start()
     {
-        manager = FindObjectOfType<SpawnPaceManager>();
-        daycycleManager = FindObjectOfType<DayCycleManager>();
+        manager = FindFirstObjectByType<SpawnPaceManager>();
+        daycycleManager = FindFirstObjectByType<DayCycleManager>();
     }
 
     void OnGUI()

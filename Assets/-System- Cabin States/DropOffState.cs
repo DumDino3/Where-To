@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class DropOffState: BaseState<CabinStateMachine.CabinStates>
+public class DropOffState: BaseState<CabinStateMachine.State>
 {
-    public DropOffState() : base(CabinStateMachine.CabinStates.Dropped)
+    public DropOffState() : base(CabinStateMachine.State.Dropped)
     {
     }
 

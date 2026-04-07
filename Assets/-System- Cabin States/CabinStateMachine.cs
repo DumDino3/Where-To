@@ -1,14 +1,10 @@
 using System;
-using NUnit.Framework.Constraints;
-using UnityEditor.Rendering;
-using UnityEngine;
 
-public class CabinStateMachine: StateMachine<CabinStateMachine.CabinStates>
+public class CabinStateMachine: StateMachine<CabinStateMachine.State>
 {
+    public static event Action<State> OnCabinStateChanged;
     
-    public static event Action<CabinStates> OnCabinStateChanged;
-    
-    public enum CabinStates
+    public enum State
     {
         Picked,
         Idling,
@@ -17,27 +13,27 @@ public class CabinStateMachine: StateMachine<CabinStateMachine.CabinStates>
 
     void Awake()
     {
-        States.Add(CabinStates.Picked, new PickUpState());
-        States.Add(CabinStates.Idling, new IdleState());
-        States.Add(CabinStates.Dropped, new DropOffState());
-        CurrentState = States[CabinStates.Idling];
+        States.Add(State.Picked, new PickUpState());
+        States.Add(State.Idling, new IdleState());
+        States.Add(State.Dropped, new DropOffState());
+        CurrentState = States[State.Idling];
     }
 
     public void SetPickUp()
     {
-        QueueNextState(CabinStates.Picked);
-        OnCabinStateChanged?.Invoke(CabinStates.Picked);
+        QueueNextState(State.Picked);
+        OnCabinStateChanged?.Invoke(State.Picked);
     }
 
     public void SetDropOff()
     {
-        QueueNextState(CabinStates.Dropped);
-        OnCabinStateChanged?.Invoke(CabinStates.Dropped);
+        QueueNextState(State.Dropped);
+        OnCabinStateChanged?.Invoke(State.Dropped);
     }
-    
+
     public void SetIdle()
     {
-        QueueNextState(CabinStates.Idling);
-        OnCabinStateChanged?.Invoke(CabinStates.Idling);
+        QueueNextState(State.Idling);
+        OnCabinStateChanged?.Invoke(State.Idling);
     }
 }

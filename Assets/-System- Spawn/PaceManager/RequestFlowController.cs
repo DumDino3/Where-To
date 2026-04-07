@@ -24,20 +24,20 @@ public sealed class RequestFlowController
         DropoffId = 0;
     }
     
-    public FlowResult HandleCabinState(CabinStateMachine.CabinStates state)
+    public FlowResult HandleCabinState(CabinStateMachine.State state)
     {
         if (!HasActiveQuest)
             return FlowResult.None;
 
         switch (state)
         {
-            case CabinStateMachine.CabinStates.Idling:
+            case CabinStateMachine.State.Idling:
                 return FlowResult.Toggle(PickupId);
 
-            case CabinStateMachine.CabinStates.Picked:
+            case CabinStateMachine.State.Picked:
                 return FlowResult.Toggle(DropoffId);
 
-            case CabinStateMachine.CabinStates.Dropped:
+            case CabinStateMachine.State.Dropped:
                 HasActiveQuest = false;
                 return FlowResult.Done;
 

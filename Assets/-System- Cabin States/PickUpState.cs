@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class PickUpState: BaseState<CabinStateMachine.CabinStates>
+public class PickUpState: BaseState<CabinStateMachine.State>
 {
-    public PickUpState() : base(CabinStateMachine.CabinStates.Picked)
+    public PickUpState() : base(CabinStateMachine.State.Picked)
     {
     }
 

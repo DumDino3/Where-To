@@ -3,10 +3,9 @@ using System.Collections.Generic;
 
 public class PooledRequestIDCompiler : MonoBehaviour
 {
-    private RideRequestDatabaseSO database;
+    private PooledRequest pooledRequest;
     private LocationDatabaseSO locationDatabase;
 
-    private const string RIDEREQUEST_DB_PATH = "SO/Asset/RideRequestDatabaseSO";
     private const string LOCATION_DB_PATH = "SO/Asset/LocationDatabaseSO";
 
     private void Awake()
@@ -21,21 +20,25 @@ public class PooledRequestIDCompiler : MonoBehaviour
 
     private void EnsureDatabases()
     {
-        if (database == null)
-            database = Resources.Load<RideRequestDatabaseSO>(RIDEREQUEST_DB_PATH);
+        if (pooledRequest == null)
+            pooledRequest = PooledRequest.Instance ?? GameObject.FindAnyObjectByType<PooledRequest>();
 
         if (locationDatabase == null)
             locationDatabase = Resources.Load<LocationDatabaseSO>(LOCATION_DB_PATH);
 
-        if (database == null || locationDatabase == null)
-            Debug.LogWarning($"PooledRequestIDCompiler missing DB refs: database={database}, locationDatabase={locationDatabase}");
+        if (pooledRequest == null || locationDatabase == null)
+            Debug.LogWarning($"PooledRequestIDCompiler missing refs: pooledRequest={pooledRequest}, locationDatabase={locationDatabase}");
     }
 
     public List<string> CompileIds()
     {
         var compiledIds = new List<string>();
+        var entries = pooledRequest?.PooledRequests;
 
-        foreach (var entry in database.GetAll())
+        if (entries == null)
+            return compiledIds;
+
+        foreach (var entry in entries)
         {
             var spawnEntry = locationDatabase.SearchByName(entry.spawnId);
             var destinationEntry = locationDatabase.SearchByName(entry.destinationId);

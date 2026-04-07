@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class IdleState: BaseState<CabinStateMachine.CabinStates>
+public class IdleState: BaseState<CabinStateMachine.State>
 {
-    public IdleState() : base(CabinStateMachine.CabinStates.Idling)
+    public IdleState() : base(CabinStateMachine.State.Idling)
     {
     }
 

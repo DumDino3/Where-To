@@ -33,10 +33,8 @@ public class RandomRequestGen : MonoBehaviour
             priorityID = 0;
             timeSeg = -1;
         
-            string questID = $"{durationID:D3}{pickupID:D3}{dropOffID:D3}{priorityID:D2}{timeSeg:D2}";
+            string questID = $"{durationID:D3} {pickupID:D3} {dropOffID:D3} {priorityID:D2} {timeSeg:D2}";
             onQuestGenerated?.Invoke(questID);
         }
     }
-    
-    
 }

@@ -3,8 +3,23 @@ using UnityEngine;
 
 public class PooledRequest : MonoBehaviour
 {
-    [SerializeField] private RideRequestDatabaseSO requestDatabase;
-    private List<RideRequestEntry> requestEntries;
+    public static PooledRequest Instance { get; private set; }
 
-    private const string RIDEREQUEST_DB_PATH = "SO/Asset/RideRequestDatabaseSO";
+    public List<RideRequestEntry> PooledRequests => pooledRequest;
+
+    private void Awake()
+    {
+        // Singleton
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        Instance = this;
+        pooledRequest = requestDatabase.GetAll();
+    }
+
+    [SerializeField] private RideRequestDatabaseSO requestDatabase;
+    private List<RideRequestEntry> pooledRequest;
 }
