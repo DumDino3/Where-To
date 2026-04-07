@@ -15,37 +15,29 @@ MonoBehaviour:
   entries:
   - poolName: yay
     poolId: 001
-    transition: yay
-    getOn: yay
-    end: yay
+    transition: transition_001
+    getOn: geton_001
+    end: end_001
     during:
-    - yay
-    - yay1
-    - yay2
+    - during_001
   - poolName: yo
     poolId: 002
-    transition: yo
-    getOn: yo
-    end: yo
+    transition: transition_002
+    getOn: geton_002
+    end: end_002
     during:
-    - yo
-    - yo1
-    - yo2
+    - during_002
   - poolName: yar
     poolId: 003
-    transition: yar
-    getOn: yar
-    end: yar
+    transition: transition_003
+    getOn: geton_003
+    end: end_003
     during:
-    - yar
-    - yar1
-    - yar2
+    - during_003
   - poolName: yip
     poolId: 004
-    transition: yip
-    getOn: yip
-    end: yip
+    transition: transition_004
+    getOn: geton_004
+    end: end_004
     during:
-    - yip
-    - yip1
-    - yip2
+    - during_004

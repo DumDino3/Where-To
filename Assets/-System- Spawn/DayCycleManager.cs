@@ -73,5 +73,4 @@ public class DayCycleManager : MonoBehaviour
         
     }
     #endregion
-
 }

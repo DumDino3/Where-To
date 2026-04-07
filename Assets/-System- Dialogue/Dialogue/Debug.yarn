@@ -1,0 +1,31 @@
+﻿title: Debug
+---
+This is an example of a Yarn Spinner script. Write your dialogue here!
+This is the second
+this is something
+-> Jump test 2
+    <<jump test2>>
+-> Jump test 3
+    <<jump test3>>
+-> Jump test 4
+    <<jump test4>>
+
+===
+
+title: test2
+---
+This is the second node in the Yarn Spinner script.
+
+===
+
+title: test3
+---
+This is the third node in the Yarn Spinner script.
+
+===
+
+title: test4
+---
+This is the fourth node in the Yarn Spinner script.
+
+===
