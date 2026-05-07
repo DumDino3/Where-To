@@ -7,6 +7,11 @@ TagManager:
   - Car
   - VCams
   - SpawnDirector
+  - LeftVCam
+  - FrontVCam
+  - RightVCam
+  - BackVCam
+  - UnderVCam
   layers:
   - Default
   - TransparentFX

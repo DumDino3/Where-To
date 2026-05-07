@@ -9,7 +9,7 @@ public class PooledRequestIDCompiler : MonoBehaviour
     {
         pooledRequest = PooledRequest.Instance ?? GameObject.FindAnyObjectByType<PooledRequest>();
         if (pooledRequest == null)
-            Debug.LogWarning("PooledRequestIDCompiler: failed to find PooledRequest instance.");
+        Debug.LogWarning("PooledRequestIDCompiler: failed to find PooledRequest instance.");
     }
 
     public List<string> CompileIds()
@@ -22,12 +22,9 @@ public class PooledRequestIDCompiler : MonoBehaviour
 
         foreach (var entry in entries)
         {
-            string spawnId = entry.spawnId;
-            string destinationId = entry.destinationId;
-            string id = entry.duration + spawnId + destinationId + entry.priority + entry.timeSegment;
+            string id = entry.duration + entry.spawnId + entry.destinationId + entry.priority + entry.timeSegment;
             compiledIds.Add(id);
         }
-    
         return compiledIds;
     }
 }

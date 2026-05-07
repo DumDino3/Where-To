@@ -55,7 +55,7 @@ public class DatabaseImporter
             if (fields.Length < 10) continue; // Ensure all columns are present
 
             List<string> conditionList = new List<string>();
-            if (fields.Length >= 10 && !string.IsNullOrWhiteSpace(fields[5]))
+            if (fields.Length >= 11 && !string.IsNullOrWhiteSpace(fields[10]))
             {
                 string[] duringParts = fields[10].Split('/');
                 foreach (var part in duringParts)
@@ -96,9 +96,53 @@ public class DatabaseImporter
             });
         }
 
+        ResolveRideRequestAssetIds(databaseSO);
+
         EditorUtility.SetDirty(databaseSO);
         AssetDatabase.SaveAssets();
         Debug.Log($"RideRequestImporter: Imported {databaseSO.entries.Count} ride requests.");
+    }
+
+    private static void ResolveRideRequestAssetIds(RideRequestDatabaseSO databaseSO)
+    {
+        if (databaseSO == null || databaseSO.entries == null || databaseSO.entries.Count == 0)
+            return;
+
+        LocationDatabaseSO locationDatabase = AssetDatabase.LoadAssetAtPath<LocationDatabaseSO>(LOCATION_ASSET);
+        if (locationDatabase == null)
+            Debug.LogWarning($"RideRequestImporter: failed to load LocationDatabaseSO at '{LOCATION_ASSET}'");
+
+        DialoguePoolDatabaseSO dialoguePoolDatabase = AssetDatabase.LoadAssetAtPath<DialoguePoolDatabaseSO>(DIALOGUE_POOL_ASSET);
+        if (dialoguePoolDatabase == null)
+            Debug.LogWarning($"RideRequestImporter: failed to load DialoguePoolDatabaseSO at '{DIALOGUE_POOL_ASSET}'");
+
+        for (int i = 0; i < databaseSO.entries.Count; i++)
+        {
+            var entry = databaseSO.entries[i];
+
+            if (!string.IsNullOrWhiteSpace(entry.spawnId) && locationDatabase != null)
+            {
+                var spawnEntry = locationDatabase.SearchByName(entry.spawnId);
+                if (spawnEntry.HasValue)
+                    entry.spawnId = spawnEntry.Value.id;
+            }
+
+            if (!string.IsNullOrWhiteSpace(entry.destinationId) && locationDatabase != null)
+            {
+                var destinationEntry = locationDatabase.SearchByName(entry.destinationId);
+                if (destinationEntry.HasValue)
+                    entry.destinationId = destinationEntry.Value.id;
+            }
+
+            if (!string.IsNullOrWhiteSpace(entry.dialoguePoolId) && dialoguePoolDatabase != null)
+            {
+                var poolEntry = dialoguePoolDatabase.SearchByName(entry.dialoguePoolId);
+                if (poolEntry.HasValue)
+                    entry.dialoguePoolId = poolEntry.Value.poolId;
+            }
+
+            databaseSO.entries[i] = entry;
+        }
     }
     #endregion
 

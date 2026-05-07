@@ -6,7 +6,7 @@ public class PooledRequestDataProvider : MonoBehaviour
     private SpawnPaceManager paceManager; // Reference to the system that accepts quest IDs
     private PooledRequestIDCompiler idCompiler;
 
-    private void Awake()
+    private void Start()
     {
         idCompiler = GameObject.FindAnyObjectByType<PooledRequestIDCompiler>();
         paceManager = FindAnyObjectByType<SpawnPaceManager>();

@@ -1,12 +1,6 @@
 using Unity.Cinemachine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
-using UnityEngine.UI;
-using Yarn;
-using Yarn.Unity;
-
 public class CamManager : MonoBehaviour
 {
     public List<CinemachineCamera> CamAngles;
@@ -16,7 +10,7 @@ public class CamManager : MonoBehaviour
     private int screenW;
     private int screenH;
 
-    public int currentAngle;
+    public int currentAngle = 1;
 
     public CinemachineBrain cineBrain;
 
@@ -36,8 +30,6 @@ public class CamManager : MonoBehaviour
         //Determine where screen edges would be on set resolution
         screenW = Screen.width;
         screenH = Screen.height;
-
-
     }
 
     void Update()
@@ -54,7 +46,7 @@ public class CamManager : MonoBehaviour
             // Check mouse position to detect edge touches -> update currentAngle
             if (rightEdge && currentAngle < CamAngles.Count - 2 && !cineBrain.IsBlending)
             {
-                currentAngle++;      
+                currentAngle++;
             }
             else if (leftEdge && currentAngle > 0 && !cineBrain.IsBlending && currentAngle != 4)
             {
@@ -79,10 +71,15 @@ public class CamManager : MonoBehaviour
         // Lower all cam priority
         foreach (var p in CamAngles)
         {
-            p.Priority = 5;
+            p.Priority.Value = 2;
         }
 
         // Boost current camera's priority
-        CamAngles[currentAngle].Priority = 10;
+        CamAngles[currentAngle].Priority.Value = 10;
+    }
+
+    public void SwitchToCam(int angle)
+    {
+        currentAngle = angle;
     }
 }
