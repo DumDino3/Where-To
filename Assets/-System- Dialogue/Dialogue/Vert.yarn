@@ -8,39 +8,77 @@ RADIO (Worker FM): ...and to the lone driver in the velvet cab, if you're listen
 
 // Tactile Prompt: TURN IGNITION KEY.
 // The dashboard neon flickers to life, casting a red and blue hue across the dirty fabric of the cabin. The meter dings. A passenger doors heavy THUNK echoes. A frail, exhausted man in a faded, oversized canvas coat slides into the back seat. He looks seventy, his skin translucent under the neon lights.
-
+title: Begin
+---
 You: Good afternoon. Where to, sir?
-???: These two spots I marked on the map, I need to be there.
-You: Ok, let's go.
+???: There are two places I need to be at, take me there.
+You: Ok, where should we go first?
+???: You decide.
+===
 
-You: Where exactly are we headed, sir?
-???: Huh? I thought you're supposed to know.
-MULTIPLE: I'm sorry, I've barely been here myself. The area's map is non-existant so I'll have to mark locations on the map manually.
-???: Oh my god. I am with a cab driver who has no idea where he's going.
-MULTIPLE: Hey! I just need some time to build the map.
-???: Sure... Anyway, about the destination, you'll know when you get there.
+title: WhereTo
+---
+???: So, where did you decide to take me?
+You: Uhm... I'm just travelling to a marker you gave me, I don't know what awaits at the destination.
+???: How is it possible that a cab driver does not know the map.
+You: I am the first person to be assigned to this area after the conflict, I am supposed to re-create the map of the area. They pay a hefty sum for this.
+???: Why are you doing this job?
+    -> Why would I not! They're paying well for the map.
+        ???: The money, why do you need it?
+    -> I don't know. It's like the rest of my life doesn't matter anymore. I am here now, that is all I know and ever will know, sir.
+        ???: Don't worry, this is definitely somewhere to be.
+        ???: I believe it was never our destiny to find our purpose in life. But rather to never stop searching.
+        ???: Along that journey, this cab, this void in your soul might be all you have, but it's still something.
+        ???: Stay the course.
+        Paul: You can call me Paul, by the way.
+    -> I like meeting new people. Like you, good sir.
+        Paul: I'd like to know more about you too. By the way, you can call me Paul.
+===
 
+title: Bridge
+---
+Paul: Slow down, we're there.
+Paul: To the left, what do you see.
+    -> It's beautiful.
+        Paul: Good.
+    -> Ruins.
+        Paul: It has been like that ever since I came to be. Perhaps from a war long ago. Or it's just an unfinished building, who knows, hard to see from here.
+        Paul: The point is, who cares, people should learn to stop looking at the unfinished, the damaged. Appreciate the view.
+        Paul: Tell me, what else do you see.
+    -> The moon.
+        Paul: In the afternoon, you can see the sun too.
+        Paul: Sky view through the hole of a torn building. Damn poetic. You should definitely bring some girls here.
+        -> I'm bi-sexual
+            Paul: Okay. Maybe bring a guy sometimes.
+        -> I'm homosexual
+            Paul: Sure, bring a guy. Whatever makes you happy.
+        -> My sexuallity is complicated.
+            Paul: Sure. Bring a friend, then. Whoever makes you happy.
+    -> That's enough. Let's get going.
+===
 
-Paul: I guess I'll be your mentor heh?
-You: Yup.
-Paul: Ask ahead.
--> You: What's that big tower?
-    Paul: That's Cyrell's corp, they used to own the district. We fought against them for economic freedom. We got it for a while, freed some synths, but got crushed.
-    Paul: The result is what you see around you rubbles and muck.
-    You: Zamn
--> You: Why exactly did you guys fight?
-    Paul: Cause we are gay lol
+title: WhenTo
+---
+-> You: So, Paul. What was that about 
+===
 
+title: TheFactory
+---
 
+===
+
+title: Farewell
+---
 Paul: I'm turning 35 tommorow.
 You: oh...
 Paul: Was I a good guide?
 You: You're a good man.
 Paul: Farewell.
 You: Where will you go now?
-Paul: If I tell you, what's the point of it :)).
+Paul: If I tell you, what's the point of it.
 You: Will I forget you?
 Paul: You won't. Goodbye.
+===
 
 
 
