@@ -1,26 +1,129 @@
-﻿title: Paul
----
-You: Where to, good sir?
-???: Where to, I wonder...
-You: ...
-You: Sir?
-???: It's just that, I don't know where to go next, so many places I want to see.
-???: Is the sea port still beautiful?
-You: I don't know, sir. In fact, this is my first shift.
-Paul: Oh. Thank you for letting me know young man. By the way, call me Paul.
-Paul: This might be interesting. A set of fresh eyes might be just what I need.
-You: Uhm... So... To the seaport?
-Paul: Yes. To the seaport.
+﻿ACT I: THE INTRO (The Mountain Pass)
+[EVENT_TAG: START_GAME]
+// Visual: The interior of a beat-up, retro-futuristic taxi. Rain streaks the windshield. Outside, the massive, glowing corporate towers block the sky, but right now, you are parked on a dark, high mountain pass overlooking the district's glowing, smog-filled belly.
+// Tactile Prompt: CRANK UP WINDOW (Muffles the outside hum of distant factory turbines).
+// Tactile Prompt: CHUG COFFEE (Clears the dark fog on the edges of the screen).
 
-[Arrives at seaport]
+RADIO (Worker FM): ...and to the lone driver in the velvet cab, if you're listening out there—the people of District 15 say thank you. Yesterday, you got those black-market antibiotics past the Sector 4 blockades. A true hero of the gutter. Bravo.
 
-You: Here we are... Is this what you expected?
-Paul: I want your impression of it. What do you think?
-You: It is, a seaport, at night, nothing much to it.
-Paul: Is is much for me. This was where I watched my first sunset, couldn't find the pier tho.
-You: 
+// Tactile Prompt: TURN IGNITION KEY.
+// The dashboard neon flickers to life, casting a red and blue hue across the dirty fabric of the cabin. The meter dings. A passenger doors heavy THUNK echoes. A frail, exhausted man in a faded, oversized canvas coat slides into the back seat. He looks seventy, his skin translucent under the neon lights.
 
-[Paul gives you a map, with location marked on it, it resembles your map in some ways but some route are different, you annotate these locations into your own map.]
+You: Good afternoon. Where to, sir?
+???: These two spots I marked on the map, I need to be there.
+You: Ok, let's go.
 
-You: The work of god dies in your arms and you become a shithead begging for legging lol 
-===
+You: Where exactly are we headed, sir?
+???: Huh? I thought you're supposed to know.
+MULTIPLE: I'm sorry, I've barely been here myself. The area's map is non-existant so I'll have to mark locations on the map manually.
+???: Oh my god. I am with a cab driver who has no idea where he's going.
+MULTIPLE: Hey! I just need some time to build the map.
+???: Sure... Anyway, about the destination, you'll know when you get there.
+
+
+Paul: I guess I'll be your mentor heh?
+You: Yup.
+Paul: Ask ahead.
+-> You: What's that big tower?
+    Paul: That's Cyrell's corp, they used to own the district. We fought against them for economic freedom. We got it for a while, freed some synths, but got crushed.
+    Paul: The result is what you see around you rubbles and muck.
+    You: Zamn
+-> You: Why exactly did you guys fight?
+    Paul: Cause we are gay lol
+
+
+Paul: I'm turning 35 tommorow.
+You: oh...
+Paul: Was I a good guide?
+You: You're a good man.
+Paul: Farewell.
+You: Where will you go now?
+Paul: If I tell you, what's the point of it :)).
+You: Will I forget you?
+Paul: You won't. Goodbye.
+
+
+
+ACT II: OPTIONAL NODE – THE DISTANCE 15 BRIDGE
+[EVENT_TAG: VISIT_BRIDGE]
+// Visual: The car drives onto a massive, sweeping concrete bridge spanning the black, oily river that cuts through the slums. Giant industrial pipes crawl along the suspension cables like rusted vines. The neon lights of the city shimmer violently on the filthy water below.
+// Tactile Prompt: DIM CABIN LIGHTS (Allows Paul to look out the side window clearly).
+
+PAUL: // Stares out the window, his hand pressed against the glass. Look at the river. Beautiful, isn’t it? The way the neon bleeds right into the filth.
+
+YOU: It’s a open sewer, Paul. It smells like synthetic sulfur.
+
+PAUL: It’s a lifeline. When I was younger, I used to stand on the lower beams right here. The Corp owns the towers, they own the air pipelines, they own the dirt. But they don't own the current under this concrete. It’s the only thing in this whole district that moves because it wants to, not because a computer program told it to.
+
+YOU: Sounds like you love this place. Or you're terrified of it.
+
+PAUL: Both. It’s a beautiful, crushing void. It never stops moving, but if you drop into it, it swallows you whole without a trace. I spent years trying to paint the way the light hits these suspension cables. I never got it right. The shadows change too fast down here.
+
+// The car reaches the end of the bridge. Control returns to the driving loop.
+
+ACT III: OPTIONAL NODE – THE WALL OF THE LOST (The Mural)
+[EVENT_TAG: VISIT_MURAL]
+// Visual: The taxi idles in a cramped, narrow residential alleyway. Outside, a crumbling concrete retaining wall is covered in hundreds of hand-carved names, faded, rain-soaked paper photographs, and small plastic flowers tucked into the cracks of the stone.
+
+PAUL: Stop here. Turn the engine down, please. Just for a second.
+
+YOU: The Wall of the Lost. A lot of ghosts on this concrete.
+
+PAUL: Twenty years ago, the uprisings turned this alley into a graveyard. The workers fought with pipe wrenches and bare teeth just to own the right to exist. Look over there, near the bottom corner. Right under the name 'Tamy'. Do you see it?
+
+YOU: // Look around mechanic: Focus on the wall text. It says... 'Paul'. That's your name.
+
+PAUL: // A bitter, quiet laugh. Everyone who didn't show up to the rallies after the third day of the crackdowns was assumed recycled or dead. My friends carved my name into the stone. But I wasn't dead. I was a coward. While Tamy and the others stayed to face the corporate enforcers, I ran. I slipped into a cargo transport and spent twenty years across the border living a 'free' life as a painter. I had freedom, driver. But every single day, I was just looking backward at this wall.
+
+YOU: You survived, Paul. The people who built this wall didn't do it out of anger. They did it to remember the fire.
+
+PAUL: // Sinks back into the shadows of the seat. Maybe. But the guilt... the guilt stays cleaner than the grime outside.
+
+// Control returns to the driving loop.
+
+ACT IV: THE CLIMAX (The Rehabilitation Clinic Gate)
+[TRIGGER: BOTH VISIT_BRIDGE AND VISIT_MURAL == TRUE]
+// Visual: The car pulls up to a massive, sterile, blindingly white gate. Corporate logos pulse in sharp, cold blue. Heavily armed drone turrets hum above the checkpoint. The lo-fi radio music turns to sharp corporate static.
+
+YOU: We're here. Sector 15 Rehab Clinic. You want me to help you out with your coat?
+
+PAUL: // Stares at the sterile white walls through the rearview mirror. His breathing is shallow, ragged. I’m not going in there, driver.
+
+YOU: What do you mean? You said this was the final stop.
+
+PAUL: If I walk through those security gates, they log my chassis number, they scrub my memory files, and they turn my remains back into liquid biomass and industrial data. I'm thirty years old, driver.
+
+YOU: Thirty? Paul, you look—
+
+PAUL: Like an old man? Yeah. I was built in the cloning pipelines twenty years ago. The corporate synthetic lines are engineered to grow fast, work hard, and die early. We don't stop aging once we leave the vats. Our biological clocks run three times faster than yours.
+
+YOU: // Silence. You're a synth. A runner.
+
+PAUL: A broken unit. I came back to this dirty, beautiful district looking for some kind of closure before my clock ran out. I thought I'd find it in the ruins or at the wall. But I was wrong. // He looks directly at you in the mirror. I found it right here. Thanks to a truly good human being.
+
+YOU: I just drove the car, Paul.
+
+PAUL: You didn't just drive. You let an old, dying synthetic sit in a clean, quiet space and remember what it feels like to be treated like a person. You didn't judge my rags, you didn't check my barcode, and you listened to a lonely ghost. You have a good soul, driver. Don't let this corporate gutter take that away from you.
+
+PAUL: Do me one last favor. Turn the car around. Take me back to the bridge. Fast.
+
+ACT V: THE ENDING (The Return)
+[EVENT_TAG: FINAL_RUN]
+// Visual: The taxi screams back down the highway. The rain pours heavier now, washing the bio-grime off the windshield. The lo-fi folk station plays a soft, melancholic melody. The car pulls onto the crest of the District 15 Bridge and idles. The black river flows silently below.
+
+YOU: // Putting the car in park. We’re back, Paul. Best view of the water in the whole city.
+
+// No response from the back seat.
+
+YOU: Paul?
+
+// Tactile Prompt: LOOK IN REARVIEW MIRROR.
+// Paul is slouched against the passenger window, his eyes open, staring peacefully out at the shimmering neon reflections on the water. His chest is completely still. He looks lighter, the tension gone from his face. He died a free man.
+
+// Tactile Prompt: LOOK DOWN AT THE FRONT CONSOLE.
+// Bolted directly into the metal floorboards between the driver and passenger seats is a clunky, retro, copper-plated espresso machine. It is completely new, warm to the touch, and gently whistling with fresh steam. Tucked under the metal handle is a small scrap of paper with Paul's handwriting:
+
+// TEXT ON SCREEN: "Keep the coffee smoking. Thank you for the ride. - P."
+
+[EVENT_TAG: ROLL_CREDITS]
+// Fade to black as the rain continues to thunk against the roof of the cab.
