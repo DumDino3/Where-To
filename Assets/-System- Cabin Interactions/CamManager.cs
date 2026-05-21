@@ -48,11 +48,13 @@ public class CamManager : MonoBehaviour
             {
                 currentAngle++;
             }
+            
             else if (leftEdge && currentAngle > 0 && !cineBrain.IsBlending && currentAngle != 4)
             {
                 currentAngle--;
             }
-            else if (bottomEdge && currentAngle == 1 && !cineBrain.IsBlending)
+
+            else if (bottomEdge && !cineBrain.IsBlending)
             {
                 currentAngle = 4;
             }
@@ -60,6 +62,16 @@ public class CamManager : MonoBehaviour
             else if (topEdge && currentAngle == 4 && !cineBrain.IsBlending)
             {
                 currentAngle = 1;
+            }
+
+            else if (leftEdge && currentAngle == 4 && !cineBrain.IsBlending)
+            {
+               currentAngle = 0;
+            }
+
+            else if (rightEdge && currentAngle == 4 && !cineBrain.IsBlending)
+            {
+                currentAngle = 2;
             }
         }
 

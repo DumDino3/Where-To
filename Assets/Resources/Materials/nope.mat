@@ -8,25 +8,37 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: nope
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: 4800000, guid: bb97510c8be630341bfab8916341eea8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _CLIPTRIPLANAR_ON
+  - _MULTIPLYBYLIGHTCOLOR_ON
   - _SPECULARHIGHLIGHTS_OFF
-  m_InvalidKeywords: []
+  - _USEHALFTONE_ON
+  - _USESHADOWS_ON
+  - _USESPECULAR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AO_r_metalic_g:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _AlphaTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BC_rgb_smoothness_a:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -62,7 +74,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _EmissionTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ExtraTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _GlintTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -114,7 +134,19 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PainterlyMask_nrm_r_colVar_g:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScreenNoiseTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -146,6 +178,18 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriplanarTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -165,6 +209,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaClipThreshold: 0.1
+    - _AlphaCutoff: 0.5
     - _AlphaToMask: 0
     - _BUILTIN_QueueControl: -1
     - _BUILTIN_QueueOffset: 0
@@ -172,51 +217,104 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlendOp: 0
+    - _BlendStrength: 0.5
     - _BumpScale: 1
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
+    - _ClampAdjustments: 0
     - _ClearCoat: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _ClipTriplanar: 1
     - _ColorMode: 0
+    - _ColorNumbers: 4
     - _Cull: 2
+    - _CullMode: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DissolveAmount: 0
+    - _DissolveScale: 1
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0.1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _EmissionEffectScale: 1
+    - _EmissionLightRatio: 1
+    - _EmissionShadowRatio: 1
+    - _EmissionUVSource: 0
     - _EnableExternalAlpha: 0
     - _EnableHeightBlend: 0
     - _EnableInstancedPerPixelNormal: 1
     - _EnvironmentReflections: 1
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
+    - _FlutterAmount: 0
+    - _FlutterFramerate: 10
+    - _FlutterNoiseScale: 1
+    - _FlutterOffset: 0
+    - _FlutterSensitivity: 1
+    - _FlutterSource: 3
+    - _FlutterSpeed: 1
+    - _GlintScale: 0.4
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
+    - _GradientOffset: 0
+    - _GradientSensitivity: 1
+    - _GradientSource: 1
+    - _HalftoneMultiplier: 1.7
+    - _HalftoneOffset: 0
+    - _HalftoneScale: 4.5
     - _HeightTransition: 0
+    - _HueShift: 0
+    - _HueVariation: 0
     - _HueVariationKwToggle: 1
     - _Intensity: 1
+    - _LightRamp: 1
+    - _LightRampOffset: 0.287
+    - _LightSteps: 3
+    - _LightingMode: 1
+    - _Metalic: 0
     - _Metallic: 0
     - _Metallic0: 0
     - _Metallic1: 0
     - _Metallic2: 0
     - _Metallic3: 0
     - _Mode: 0
+    - _MultiplyByLightColor: 1
+    - _MultiplyByLightRatio: 0
+    - _NoiseAmountLight: 0
+    - _NoiseAmountShadow: 0.5
+    - _NoiseFramerate: 5
+    - _NoiseOffset: 0
+    - _NoiseScale: 2
+    - _NoiseUVSource: 0
     - _NormalMapKwToggle: 1
+    - _NormalMode: 0
+    - _NormalSurfaceOutline: 0
     - _NumLayersCount: 1
     - _OcclusionStrength: 1
+    - _OutlineWidth: 0
     - _Parallax: 0.005
+    - _PosterizeColors: 0
+    - _PosterizeLight: 0
+    - _PuddleScale: 0.4
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RimLightLitIntensity: 1
+    - _RimLightRampOffset: 0.5
+    - _RimLightShadowIntensity: 1
+    - _RimRamp: 1
     - _SampleGI: 0
+    - _SaturationShift: 0
+    - _SaturationVariation: 0
+    - _ScrollEmission: 0
     - _Shininess: 0
     - _Smoothness: 0.15
     - _Smoothness0: 0.5
@@ -225,21 +323,78 @@ Material:
     - _Smoothness3: 0.5
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
+    - _SnowScale: 10
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 1
     - _SoftParticlesNearFadeDistance: 0
+    - _Space: 1
     - _SpecSource: 0
     - _SpecularHighlights: 0
+    - _SpecularRamp: 0
+    - _SpecularRampOffset: 0.93
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
+    - _StrokeBlendingNoiseScale: 500
+    - _StrokeBlendingNoiseStrength: 0.15
+    - _StrokeRandomness: 1
+    - _StrokeScale: 7.74
     - _SubsurfaceIndirect: 0.25
     - _SubsurfaceKwToggle: 0
     - _Surface: 0
+    - _SwayAmount: 0
+    - _SwayFramerate: 10
+    - _SwayNoiseScale: 1
+    - _SwayOffset: 0
+    - _SwaySensitivity: 1
+    - _SwaySource: 3
+    - _SwaySpeed: 1
+    - _SwirlAmount: 0
+    - _SwirlFramerate: 10
+    - _SwirlNoiseScale: 1
+    - _SwirlOffset: 0
+    - _SwirlSensitivity: 1
+    - _SwirlSource: 3
+    - _SwirlSpeed: 1
+    - _TriplanarMultiplier: 2
+    - _TriplanarOffset: 0
+    - _TriplanarSpace: 1
+    - _UseBlendingNoise: 0
+    - _UseCOZYPrecipitation: 0
+    - _UseColorAdjustments: 0
+    - _UseDissolve: 0
+    - _UseEmission: 0
+    - _UseFlutter: 0
+    - _UseGlint: 0
+    - _UseGradientShading: 0
+    - _UseHSVVariation: 0
+    - _UseHalftone: 1
+    - _UseModifiedNormals: 0
+    - _UseOutlines: 1
+    - _UseRimLighting: 0
+    - _UseScreenNoise: 1
+    - _UseShadows: 1
+    - _UseSpecular: 1
+    - _UseSway: 0
+    - _UseSwirl: 0
+    - _UseTriplanar: 1
+    - _UseWave: 0
+    - _ValueShift: 0
+    - _ValueVariation: 0
+    - _Variation: 0.1
+    - _VariationScale: 1
+    - _VariationSource: 0
     - _WIND_BRANCH1: 0
     - _WIND_BRANCH2: 0
     - _WIND_RIPPLE: 0
     - _WIND_SHARED: 0
     - _WIND_SHIMMER: 0
+    - _WaveAmount: 0
+    - _WaveFramerate: 10
+    - _WaveNoiseScale: 0.5
+    - _WaveOffset: 0
+    - _WaveSensitivity: 1
+    - _WaveSource: 3
+    - _WaveSpeed: 3.004473
     - _WindQuality: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
@@ -249,13 +404,44 @@ Material:
     - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.62264144, g: 0.62264144, b: 0.62264144, a: 1}
+    - _CustomNormalDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _CustomNormalEllipseSize: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionScrolling1: {r: 1, g: 1, b: 0, a: 0}
+    - _EmissionScrolling2: {r: 0.1, g: -0.5, b: 0, a: 0}
+    - _FarColor: {r: 0, g: 0, b: 0, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _FlutterDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _FlutterMask: {r: 1, g: 0, b: 0, a: 0}
+    - _GlintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GradientChannelMask: {r: 0, g: 1, b: 0, a: 0}
+    - _GradientPositionalOffset: {r: 0, g: 0, b: 0, a: 0}
     - _HueVariationColor: {r: 1, g: 0.5, b: 0, a: 0.2}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainColor: {r: 0.4415095, g: 0.4415095, b: 0.4415095, a: 1}
+    - _NearColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _PuddleColor: {r: 0.19475657, g: 0.34486926, b: 0.43396226, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimLightColor: {r: 0.3921569, g: 0.3921569, b: 0.3921569, a: 1}
+    - _ShadowColor: {r: 0.54901963, g: 0.7244655, b: 1, a: 1}
+    - _SnowColor: {r: 1, g: 1, b: 1, a: 0}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _SubsurfaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SwayDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _SwayMask: {r: 1, g: 0, b: 0, a: 0}
+    - _SwirlDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _SwirlMask: {r: 1, g: 0, b: 0, a: 0}
+    - _TriplanarColor: {r: 1, g: 1, b: 1, a: 0}
+    - _TriplanarDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _VariationColorA: {r: 0, g: 0, b: 0, a: 0}
+    - _VariationColorB: {r: 1, g: 1, b: 1, a: 0}
+    - _WaveDirection1: {r: 0, g: 1, b: 0, a: 0}
+    - _WaveDirection2: {r: 0, g: 1, b: 0, a: 0}
+    - _WaveInfluenceDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _WaveMask: {r: 1, g: 0, b: 0, a: 0}
     - _col: {r: 0, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
@@ -272,3 +458,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 10
+--- !u!114 &8968946262541165048
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.ShaderGraph.Editor::UnityEditor.Rendering.BuiltIn.AssetVersion
+  version: 0

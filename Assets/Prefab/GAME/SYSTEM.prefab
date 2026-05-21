@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4288005877276403684}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0067681526, y: -0.7044034, z: -0.0067173005, w: 0.7097359}
-  m_LocalPosition: {x: -2.2500267, y: -0.9206989, z: -2.284729}
+  m_LocalRotation: {x: 0.020295294, y: 0.7068169, z: 0.01595823, w: -0.7069253}
+  m_LocalPosition: {x: -8.586731, y: -1.5983719, z: 3.7082062}
   m_LocalScale: {x: 3.0902882, y: 3.0902872, z: 3.0902882}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,7 +44,7 @@ Camera:
   m_GameObject: {fileID: 4288005877276403684}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0

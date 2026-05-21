@@ -1,5 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections.Generic;
 
 public class WaypointFollower : MonoBehaviour
@@ -52,20 +54,23 @@ public class WaypointFollower : MonoBehaviour
     {
         if (nextTarget == null || previousTarget == null) return;
 
-        distance = Vector3.Distance(transform.position, nextTarget.position);
+        Vector3 targetOffset = nextTarget.position - transform.position;
+        targetOffset.y = 0f;
+        distance = targetOffset.magnitude;
 
         if (distance > 0.5f)
         {
-            direction = (nextTarget.position - transform.position).normalized;
+            Vector3 directionToTarget = targetOffset;
+            direction = Vector3.ProjectOnPlane(directionToTarget, Vector3.up).normalized;
             float actualTurn = stop ? 0 : turnSpeed;
             float actualSpeed = stop ? 0 : moveSpeed;
 
             if (direction != Vector3.zero)
             {
                 Quaternion targetRot = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, actualTurn * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, actualTurn * Time.fixedDeltaTime);
             }
-            transform.position += transform.forward * actualSpeed * Time.deltaTime;
+            transform.position += transform.forward * actualSpeed * Time.fixedDeltaTime;
         }
         else
         {
