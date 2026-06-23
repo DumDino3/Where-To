@@ -12,6 +12,8 @@ TagManager:
   - RightVCam
   - BackVCam
   - UnderVCam
+  - Paul
+  - Home
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - Water
   - UI
   - SpawnPoint
-  - 
+  - Ground
   - 
   - 
   - 

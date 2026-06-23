@@ -28,7 +28,7 @@ public class FollowTransform : MonoBehaviour
         }
     }
 
-    void Update()
+    void LateUpdate()
     {
         float xTarget;
         float yTarget;

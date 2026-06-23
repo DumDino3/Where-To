@@ -29,7 +29,7 @@ public class StickerEraser : MonoBehaviour
         if (canvas == null)
             canvas = GetComponentInParent<Canvas>();
 
-        if (raycaster == null)
+        if (raycaster == null && canvas != null)
             raycaster = canvas.GetComponent<GraphicRaycaster>();
 
         // Start hidden
@@ -102,25 +102,17 @@ public class StickerEraser : MonoBehaviour
 
     private void FollowCursor()
     {
-        RectTransform canvasRect = canvas.transform as RectTransform;
+        if (canvas == null)
+            canvas = GetComponentInParent<Canvas>();
 
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            canvasRect,
-            Input.mousePosition,
-            canvas.renderMode == RenderMode.ScreenSpaceOverlay
-                ? null
-                : canvas.worldCamera,
-            out Vector3 worldPos
-        );
-
-        rectTransform.position = worldPos;
+        UICursorUtility.FollowCursor(rectTransform, canvas, Input.mousePosition);
     }
 
     // ---------------- SCRUB ----------------
 
     private void Scrub()
     {
-        if (!isPointerDown) return;
+        if (!isPointerDown || raycaster == null || EventSystem.current == null) return;
 
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {

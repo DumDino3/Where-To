@@ -28,7 +28,7 @@ public class Stickers : MonoBehaviour, IPointerClickHandler
     void Update()
     {
         if (isHeld)
-            FollowCursorWorld();
+            FollowCursor();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -72,19 +72,11 @@ public class Stickers : MonoBehaviour, IPointerClickHandler
         clickLocked = false;
     }
 
-    private void FollowCursorWorld()
+    private void FollowCursor()
     {
-        RectTransform canvasRect = canvas.transform as RectTransform;
+        if (canvas == null)
+            canvas = GetComponentInParent<Canvas>();
 
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            canvasRect,
-            Input.mousePosition,
-            canvas.renderMode == RenderMode.ScreenSpaceOverlay
-                ? null
-                : canvas.worldCamera,
-            out Vector3 worldPos
-        );
-
-        rectTransform.position = worldPos;
+        UICursorUtility.FollowCursor(rectTransform, canvas, Input.mousePosition);
     }
 }
