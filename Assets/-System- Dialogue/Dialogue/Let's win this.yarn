@@ -1,0 +1,51 @@
+﻿title: Winner
+---
+???: Young cab man, it seems I've missed the last bus home. Can you pick me up at the West Office?
+-> Sure.
+    <<jump Tutorial>>
+-> I'll be there
+    <<jump Tutorial>>
+===
+
+title: Tutorial
+---
+You: [Tutorial, don't skip these dialogues, you can follow along the steps while the dialogue box is still on]
+You: I should press [M] to open the map.
+You: The Green Dot is where the passenger currently is.
+You: I can use [Scroll Wheel] to zoom in on the map.
+You: Now that I have enough info, I can press [Left Shift] to start the car.
+You: [Left Shift] will also stop the car if it is currently moving.
+You: Use [A or D] to turn on blinker, when I approach an intersection with my either blinker on, I will turn into that lane if I can.
+You: I can also press [W] to cancel blinker.
+You: Futhermore, I can press [S] to turn my car around.
+You: To look around in the car, move the mouse to the very edge of the screen.
+You: Remember, when you arrive at the passenger, press [E] to pick them up.
+You: Good luck out there!
+===
+
+title: PhoneCall
+---
+You: What do I want to do...?
+-> Review tutorial
+    <<jump Tutorial>>
+-> Call passenger
+    ???: Hi, are you here yet? Press [E] When you get here, i'll come out to you.
+    You: Okay.
+===
+
+title: InTheCar
+---
+???: Thank you for picking me up, I am Paul.
+You: Hello Paul. So, where to?
+Paul: Please take me to my house at the East Suburb.
+Paul: You can get there by taking the highway.
+You: We'll head there right away, sir.
+You: [The East Suburb is far away, I should zoom out all the way from the map]
+===
+
+title: Bye
+---
+Paul: We've arrived? Thank you young man. May your night be pleasant.
+You: Bye Paul! Give me a call if you need a ride okay.
+
+===

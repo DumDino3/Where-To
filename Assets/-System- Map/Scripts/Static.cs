@@ -15,20 +15,27 @@ public static class UICursorUtility
         if (canvas == null || target == null)
             return;
 
-        RectTransform canvasRect = canvas.transform as RectTransform;
+        RectTransform targetSpace = target.parent as RectTransform;
+        if (targetSpace == null)
+            targetSpace = canvas.transform as RectTransform;
 
-        Camera cam =
-            canvas.renderMode == RenderMode.ScreenSpaceOverlay
-                ? null
-                : canvas.worldCamera;
+        Camera cam = GetEventCamera(canvas);
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvasRect,
+                targetSpace,
                 screenPosition,
                 cam,
                 out Vector2 localPoint))
         {
             target.anchoredPosition = localPoint;
         }
+    }
+
+    public static Camera GetEventCamera(Canvas canvas)
+    {
+        if (canvas == null || canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            return null;
+
+        return canvas.worldCamera != null ? canvas.worldCamera : Camera.main;
     }
 }

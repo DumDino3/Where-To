@@ -6,6 +6,7 @@ public class DialogueHelper : MonoBehaviour
     public static DialogueHelper Instance { get; private set; }
 
     private DialogueRunner diagRunner;
+    public bool IsDialogueRunning => diagRunner != null && diagRunner.IsDialogueRunning;
 
     private void Awake()
     {
@@ -24,6 +25,12 @@ public class DialogueHelper : MonoBehaviour
 
     public void RunDialogue(string title)
     {
+        if (diagRunner == null)
+        {
+            Debug.LogWarning("DialogueHelper: no DialogueRunner found.");
+            return;
+        }
+
         if (diagRunner.IsDialogueRunning)
         {
             Debug.LogWarning("Dialogue is already running!");
