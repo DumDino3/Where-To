@@ -24,15 +24,28 @@ public class StickerSpawner : MonoBehaviour
     {
         foreach (var entry in stickers)
         {
+            if (entry == null || entry.button == null || entry.stickerPrefab == null)
+            {
+                Debug.LogWarning("StickerSpawner: skipped an incomplete sticker entry.", this);
+                continue;
+            }
+
+            GameObject stickerPrefab = entry.stickerPrefab;
             entry.button.onClick.AddListener(() =>
             {
-                SpawnSticker(entry.stickerPrefab);
+                SpawnSticker(stickerPrefab);
             });
         }
     }
 
     private void SpawnSticker(GameObject prefab)
     {
+        if (prefab == null || stickerParent == null)
+        {
+            Debug.LogWarning("StickerSpawner: missing sticker prefab or parent.", this);
+            return;
+        }
+
         GameObject stickerGO = Instantiate(prefab, stickerParent);
         Stickers sticker = stickerGO.GetComponent<Stickers>();
 

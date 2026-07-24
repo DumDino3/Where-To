@@ -1,12 +1,6 @@
 using Unity.Cinemachine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
-using UnityEngine.UI;
-using Yarn;
-using Yarn.Unity;
-
 public class CamManager : MonoBehaviour
 {
     public List<CinemachineCamera> CamAngles;
@@ -16,11 +10,12 @@ public class CamManager : MonoBehaviour
     private int screenW;
     private int screenH;
 
-    public int currentAngle;
+    public int currentAngle = 1;
 
     public CinemachineBrain cineBrain;
 
     public bool stopTurning;
+    private bool disengaged = true;
 
     void Start()
     {
@@ -36,8 +31,6 @@ public class CamManager : MonoBehaviour
         //Determine where screen edges would be on set resolution
         screenW = Screen.width;
         screenH = Screen.height;
-
-
     }
 
     void Update()
@@ -48,26 +41,56 @@ public class CamManager : MonoBehaviour
         bool rightEdge = m.x > screenW * (1 - edgeThickness);
         bool bottomEdge = m.y < screenH * edgeThickness;
         bool topEdge = m.y > screenH * (1 - edgeThickness);
+        bool isOnEdge = leftEdge || rightEdge || bottomEdge || topEdge;
+
+        //When mouse moves away from an edge, allow change cam again. This is to make sure mouse held at an edge does not move the cam all the way to the end.
+        if (!isOnEdge)
+        {
+            disengaged = true;
+        }
 
         if (!stopTurning)
         {
             // Check mouse position to detect edge touches -> update currentAngle
-            if (rightEdge && currentAngle < CamAngles.Count - 2 && !cineBrain.IsBlending)
+            if (disengaged && !cineBrain.IsBlending)
             {
-                currentAngle++;      
-            }
-            else if (leftEdge && currentAngle > 0 && !cineBrain.IsBlending && currentAngle != 4)
-            {
-                currentAngle--;
-            }
-            else if (bottomEdge && currentAngle == 1 && !cineBrain.IsBlending)
-            {
-                currentAngle = 4;
-            }
-
-            else if (topEdge && currentAngle == 4 && !cineBrain.IsBlending)
-            {
-                currentAngle = 1;
+                switch (currentAngle)
+                {
+                    case 4:
+                        if (topEdge)
+                        {
+                            currentAngle = 1;
+                            disengaged = false;
+                        }
+                        else if (leftEdge)
+                        {
+                            currentAngle = 0;
+                            disengaged = false;
+                        }
+                        else if (rightEdge)
+                        {
+                            currentAngle = 2;
+                            disengaged = false;
+                        }
+                        break;
+                    default:
+                        if (rightEdge && currentAngle < 3)
+                        {
+                            currentAngle++;
+                            disengaged = false;
+                        }
+                        else if (leftEdge && currentAngle > 0)
+                        {
+                            currentAngle--;
+                            disengaged = false;
+                        }
+                        else if (bottomEdge)
+                        {
+                            currentAngle = 4;
+                            disengaged = false;
+                        }
+                        break;
+                }
             }
         }
 
@@ -79,10 +102,15 @@ public class CamManager : MonoBehaviour
         // Lower all cam priority
         foreach (var p in CamAngles)
         {
-            p.Priority = 5;
+            p.Priority.Value = 2;
         }
 
         // Boost current camera's priority
-        CamAngles[currentAngle].Priority = 10;
+        CamAngles[currentAngle].Priority.Value = 10;
+    }
+
+    public void SwitchToCam(int angle)
+    {
+        currentAngle = angle;
     }
 }

@@ -18,11 +18,11 @@ MonoBehaviour:
     requestId: 001
     timeSegment: 01
     priority: 01
-    duration: 001
+    duration: 010
     npcId: hannah
-    dialoguePoolId: yay
-    spawnId: market
-    destinationId: apartment
+    dialoguePoolId: 001
+    spawnId: 001
+    destinationId: 003
     condition:
     - SET_0102
   - day: 1
@@ -30,11 +30,11 @@ MonoBehaviour:
     requestId: 002
     timeSegment: 01
     priority: 02
-    duration: 002
+    duration: 020
     npcId: jimmy
-    dialoguePoolId: yo
-    spawnId: apartment
-    destinationId: warehouse
+    dialoguePoolId: 002
+    spawnId: 003
+    destinationId: 006
     condition:
     - SET_0102
     - HEY
@@ -43,11 +43,11 @@ MonoBehaviour:
     requestId: 003
     timeSegment: 02
     priority: 03
-    duration: 003
+    duration: 030
     npcId: hannah
-    dialoguePoolId: yar
-    spawnId: tyrell
-    destinationId: school
+    dialoguePoolId: 003
+    spawnId: 005
+    destinationId: 002
     condition:
     - SET_0304
   - day: 1
@@ -55,11 +55,11 @@ MonoBehaviour:
     requestId: 004
     timeSegment: 02
     priority: 04
-    duration: 004
+    duration: 040
     npcId: jimmy
-    dialoguePoolId: yip
-    spawnId: apartment
-    destinationId: market
+    dialoguePoolId: 004
+    spawnId: 003
+    destinationId: 001
     condition:
     - SET_0304
     - HEY
@@ -68,11 +68,11 @@ MonoBehaviour:
     requestId: 005
     timeSegment: 03
     priority: 01
-    duration: 001
+    duration: 050
     npcId: hannah
-    dialoguePoolId: yay
-    spawnId: market
-    destinationId: apartment
+    dialoguePoolId: 001
+    spawnId: 001
+    destinationId: 003
     condition:
     - SET_0102
   - day: 1
@@ -80,11 +80,11 @@ MonoBehaviour:
     requestId: 006
     timeSegment: 03
     priority: 02
-    duration: 002
+    duration: 060
     npcId: jimmy
-    dialoguePoolId: yo
-    spawnId: school
-    destinationId: tyrell
+    dialoguePoolId: 002
+    spawnId: 002
+    destinationId: 005
     condition:
     - SET_0102
     - HEY
@@ -93,11 +93,11 @@ MonoBehaviour:
     requestId: 007
     timeSegment: 04
     priority: 03
-    duration: 003
+    duration: 070
     npcId: hannah
-    dialoguePoolId: yar
-    spawnId: tyrell
-    destinationId: school
+    dialoguePoolId: 003
+    spawnId: 005
+    destinationId: 002
     condition:
     - SET_0304
   - day: 1
@@ -105,11 +105,11 @@ MonoBehaviour:
     requestId: 008
     timeSegment: 04
     priority: 04
-    duration: 004
+    duration: 080
     npcId: jimmy
-    dialoguePoolId: yip
-    spawnId: apartment
-    destinationId: market
+    dialoguePoolId: 004
+    spawnId: 003
+    destinationId: 001
     condition:
     - SET_0304
     - HEY
